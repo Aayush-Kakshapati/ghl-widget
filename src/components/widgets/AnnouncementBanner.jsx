@@ -14,6 +14,8 @@ function AnnouncementBanner({ settings }) {
           maxWidth: "600px",
         }}
       >
+        <span>{settings.message}</span>
+
         {settings.showButton && (
           <a
             href={settings.buttonUrl}

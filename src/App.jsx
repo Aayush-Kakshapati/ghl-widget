@@ -9,8 +9,6 @@ import { initializeGHL, sendToGHL } from "./communication/ghlCommunication";
 
 import { generateWidget } from "./widget/generateWidget";
 
-import { saveWidget } from "./services/storageService";
-
 function App() {
   const settings = useWidgetStore((state) => state.settings);
 
@@ -23,11 +21,11 @@ function App() {
   }, [setSettings]);
 
   useEffect(() => {
+    if (!settings) return;
+
     const widget = generateWidget(settings);
 
     sendToGHL(widget);
-
-    saveWidget(settings);
   }, [settings]);
 
   return (

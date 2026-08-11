@@ -1,71 +1,59 @@
 import { create } from "zustand";
-import { loadWidget } from "../services/storageService";
-
 
 const defaultSettings = {
+  message: "Limited Time Offer!",
 
-    message: "Limited Time Offer!",
+  buttonText: "Learn More",
 
-    buttonText: "Learn More",
+  buttonUrl: "https://example.com",
 
-    buttonUrl: "https://example.com",
-
-    colors: {
-        background: "#256aff",
-        text: "#fff651",
-        button: "#28e30f"
-    },
-    showButton: true
+  colors: {
+    background: "#256aff",
+    text: "#fff651",
+    button: "#28e30f",
+  },
+  showButton: true,
 };
 
-const initialSettings = loadWidget() || defaultSettings;
+const initialSettings = defaultSettings;
 
 export const useWidgetStore = create((set, get) => ({
+  settings: initialSettings,
 
-    settings: initialSettings,
+  updateSetting: (key, value) => {
+    set((state) => ({
+      settings: {
+        ...state.settings,
+        [key]: value,
+      },
+    }));
+  },
 
-    updateSetting: (key, value) => {
+  updateColor: (key, value) => {
+    set((state) => ({
+      settings: {
+        ...state.settings,
+        colors: {
+          ...state.settings.colors,
+          [key]: value,
+        },
+      },
+    }));
+  },
 
-        set((state) => ({
-            settings: {
-                ...state.settings,
-                [key]: value
-            }
-        }));
-    },
+  setSettings: (settings) => {
+    set({
+      settings,
+    });
+  },
 
+  resetSettings: () => {
+    set({
+      settings: defaultSettings,
+    });
+  },
 
-    updateColor: (key, value) => {
-
-        set((state) => ({
-
-            settings: {
-                ...state.settings,
-                colors: {
-                    ...state.settings.colors,
-                    [key]: value
-                }
-            }
-        }));
-    },
-
-     setSettings: (settings) => {
-
-        set({
-            settings
-        });
-
-    },
-
-    resetSettings: () => {
-
-        set({
-            settings: defaultSettings
-        });
-    },
-
-
-    getSettings: () => {
-        return get().settings;
-    }
+  getSettings: () => {
+    return get().settings;
+  },
 }));

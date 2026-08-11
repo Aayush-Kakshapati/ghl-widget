@@ -1,4 +1,6 @@
-const STORAGE_KEY = "announcement-widget";
+//used for development / has been removed after the working widget version was published
+
+/* const STORAGE_KEY = "announcement-widget";
 
 export function saveWidget(settings) {
   localStorage.setItem(
@@ -24,4 +26,4 @@ export function loadWidget() {
 
 export function clearWidget() {
   localStorage.removeItem(STORAGE_KEY);
-}
+} */
