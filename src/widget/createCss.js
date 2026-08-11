@@ -1,22 +1,38 @@
-export function createCss(settings) {
+export function createCss() {
   return `
-.announcement-banner{
-    background:${settings.colors.background};
-    color:${settings.colors.text};
-    padding:20px;
-    border-radius:8px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:20px;
+.announcement-banner {
+  padding: 20px;
+  border-radius: 8px;
+  display: flex;
+  gap: 20px;
 }
 
-.banner-button{
-    background:${settings.colors.button};
-    color:white;
-    padding:10px 18px;
-    border-radius:6px;
-    text-decoration:none;
+.banner-message {
+  display: block;
+}
+
+.banner-button {
+  color: #ffffff;
+  padding: 10px 18px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+/* Split */
+
+.layout-split {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Centered */
+
+.layout-centered {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 `;
 }

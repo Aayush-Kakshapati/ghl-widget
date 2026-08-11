@@ -1,6 +1,12 @@
 export function createHtml(settings) {
   return `
-<div class="announcement-banner">
+<div
+  class="announcement-banner layout-${settings.layout}"
+  style="
+    background-color:${settings.colors.background};
+    color:${settings.colors.text};
+  "
+>
   <span class="banner-message">
     ${settings.message}
   </span>

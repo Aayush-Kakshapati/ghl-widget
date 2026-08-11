@@ -3,7 +3,7 @@ import { createCss } from "./createCss";
 import { createJs } from "./createJs";
 
 export function generateWidget(settings) {
-  const css = createCss(settings);
+  const css = createCss();
 
   const html = `
 <style>

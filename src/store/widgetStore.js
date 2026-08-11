@@ -12,6 +12,10 @@ const defaultSettings = {
     button: "#28e30f",
   },
   showButton: true,
+  api: {
+    enabled: false,
+    url: "",
+  },
 };
 
 const initialSettings = defaultSettings;
