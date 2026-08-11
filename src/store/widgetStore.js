@@ -49,6 +49,13 @@ export const useWidgetStore = create((set, get) => ({
         }));
     },
 
+     setSettings: (settings) => {
+
+        set({
+            settings
+        });
+
+    },
 
     resetSettings: () => {
 

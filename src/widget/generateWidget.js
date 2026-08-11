@@ -3,11 +3,19 @@ import { createCss } from "./createCss";
 import { createJs } from "./createJs";
 
 export function generateWidget(settings) {
-  return {
-    html: createHtml(settings),
-    css: createCss(settings),
-    js: createJs(settings),
+  const css = createCss(settings);
 
+  const html = `
+<style>
+${css}
+</style>
+
+${createHtml(settings)}
+`;
+
+  return {
+    html,
+    js: createJs(settings),
     elementStore: settings,
   };
 }
