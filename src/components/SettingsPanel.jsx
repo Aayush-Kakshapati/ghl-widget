@@ -1,145 +1,83 @@
 import { useWidgetStore } from "../store/widgetStore";
 
-
 function SettingsPanel() {
+  const settings = useWidgetStore((state) => state.settings);
 
-    const settings = useWidgetStore(
-        (state) => state.settings
-    );
+  const updateSetting = useWidgetStore((state) => state.updateSetting);
 
+  const updateColor = useWidgetStore((state) => state.updateColor);
 
-    const updateSetting = useWidgetStore(
-        (state) => state.updateSetting
-    );
+  return (
+    <div>
+      <h2>Widget Settings</h2>
 
+      <label>Announcement Message</label>
 
-    const updateColor = useWidgetStore(
-        (state) => state.updateColor
-    );
+      <input
+        value={settings.message}
+        onChange={(e) => updateSetting("message", e.target.value)}
+      />
 
+      <label>Button Text</label>
 
-    return (
+      <input
+        value={settings.buttonText}
+        onChange={(e) => updateSetting("buttonText", e.target.value)}
+      />
+      <label>Button URL</label>
 
-        <div>
-            <h2>
-                Widget Settings
-            </h2>
+      <input
+        value={settings.buttonUrl}
+        onChange={(e) => updateSetting("buttonUrl", e.target.value)}
+      />
 
-            <label>
-                Announcement Message
-            </label>
+      <label>
+        <input
+          type="checkbox"
+          checked={settings.showButton}
+          onChange={(e) => updateSetting("showButton", e.target.checked)}
+        />
+        Show Button
+      </label>
+      <hr />
 
-            <input
-                value={settings.message}
-                onChange={(e) =>
-                    updateSetting(
-                        "message",
-                        e.target.value
-                    )
-                }
-            />
+      <h3>Colors</h3>
 
-            <label>
-                Button Text
-            </label>
+      <label>Background Color</label>
 
-            <input
-                value={settings.buttonText}
-                onChange={(e) =>
-                    updateSetting(
-                        "buttonText",
-                        e.target.value
-                    )
-                }
-            />
-            <label>
-                Button URL
-            </label>
+      <input
+        type="color"
+        value={settings.colors.background}
+        onChange={(e) => updateColor("background", e.target.value)}
+      />
 
-            <input
-                value={settings.buttonUrl}
-                onChange={(e) =>
-                    updateSetting(
-                        "buttonUrl",
-                        e.target.value
-                    )
-                }
-            />
+      <label>Text Color</label>
 
-            <label>
+      <input
+        type="color"
+        value={settings.colors.text}
+        onChange={(e) => updateColor("text", e.target.value)}
+      />
 
-                <input
-                    type="checkbox"
-                    checked={settings.showButton}
-                    onChange={(e) =>
-                        updateSetting(
-                            "showButton",
-                            e.target.checked
-                        )
-                    }
+      <label>Button Color</label>
 
-                />
+      <input
+        type="color"
+        value={settings.colors.button}
+        onChange={(e) => updateColor("button", e.target.value)}
+      />
+      <label>Widget Layout</label>
 
-                Show Button
-            </label>
-            <hr />
+      <select
+        value={settings.layout}
+        onChange={(e) => updateSetting("layout", e.target.value)}
+      >
+        <option value="split">Split</option>
 
-            <h3>
-                Colors
-            </h3>
-
-            <label>
-                Background Color
-            </label>
-
-            <input
-                type="color"
-                value={
-                    settings.colors.background
-                }
-                onChange={(e) =>
-                    updateColor(
-                        "background",
-                        e.target.value
-                    )
-                }
-            />
-
-            <label>
-                Text Color
-            </label>
-
-            <input
-                type="color"
-                value={
-                    settings.colors.text
-                }
-                onChange={(e) =>
-                    updateColor(
-                        "text",
-                        e.target.value
-                    )
-                }
-            />
-
-            <label>
-                Button Color
-            </label>
-
-            <input
-                type="color"
-                value={
-                    settings.colors.button
-                }
-                onChange={(e) =>
-                    updateColor(
-                        "button",
-                        e.target.value
-                    )
-                }
-            />
-        </div>
-    );
+        <option value="centered">Centered</option>
+      </select>
+    </div>
+  );
 }
 
 export default SettingsPanel;

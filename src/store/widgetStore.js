@@ -1,12 +1,11 @@
 import { create } from "zustand";
 
 const defaultSettings = {
+  type: "announcement",
+  layout: "split",
   message: "Limited Time Offer!",
-
   buttonText: "Learn More",
-
   buttonUrl: "https://example.com",
-
   colors: {
     background: "#256aff",
     text: "#fff651",
@@ -39,12 +38,6 @@ export const useWidgetStore = create((set, get) => ({
         },
       },
     }));
-  },
-
-  setSettings: (settings) => {
-    set({
-      settings,
-    });
   },
 
   resetSettings: () => {

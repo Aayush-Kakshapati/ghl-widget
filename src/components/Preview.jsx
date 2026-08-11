@@ -1,5 +1,5 @@
 import { useWidgetStore } from "../store/widgetStore";
-import AnnouncementBanner from "./widgets/AnnouncementBanner";
+import AnnouncementBanner from "./widgets/announcement/AnnouncementBanner";
 
 function Preview() {
 
