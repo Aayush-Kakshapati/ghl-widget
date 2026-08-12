@@ -2,36 +2,31 @@ import { useState } from "react";
 import { fetchWidgetData } from "../services/apiService";
 
 export function useWidgetData() {
-  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  async function fetchData(url) {
-    if (!url) {
-      return;
-    }
+  const fetchData = async (url) => {
+    setLoading(true);
+    setError(null);
 
     try {
-      setLoading(true);
-      setError(null);
+      const data = await fetchWidgetData(url);
 
-      const result = await fetchWidgetData(url);
+      console.log("FETCHED DATA:", data);
 
-      setData(result);
-    } catch (error) {
-      console.error(
-        "Failed to fetch widget data:",
-        error
-      );
+      return data;
+    } catch (err) {
+      console.error("Failed to fetch widget data:", err);
 
-      setError(error);
+      setError(err.message);
+
+      return null;
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return {
-    data,
     loading,
     error,
     fetchData,

@@ -5,36 +5,29 @@ import { useWidgetData } from "../hooks/useWidgetData";
 function SettingsPanel() {
   const settings = useWidgetStore((state) => state.settings);
 
-  const updateSetting = useWidgetStore(
-    (state) => state.updateSetting
-  );
+  const updateSetting = useWidgetStore((state) => state.updateSetting);
 
-  const updateColor = useWidgetStore(
-    (state) => state.updateColor
-  );
+  const updateColor = useWidgetStore((state) => state.updateColor);
 
-  const setApiData = useWidgetStore(
-    (state) => state.setApiData
-  );
+  const setApiData = useWidgetStore((state) => state.setApiData);
 
   const layouts = widgetRegistry.announcement.layouts;
 
-  const {
-    loading,
-    error,
-    fetchData,
-  } = useWidgetData();
+  const { loading, error, fetchData } = useWidgetData();
 
   const handleTestApi = async () => {
-    const result = await fetchData(
-      settings.api.url
-    );
+    console.log("FETCHING:", settings.api.url);
+
+    const result = await fetchData(settings.api.url);
+
+    console.log("RESULT FROM API:", result);
 
     if (result) {
+      console.log("SETTING API DATA:", result);
+
       setApiData(result);
     }
   };
-
   return (
     <div>
       <h2>Widget Settings</h2>
@@ -43,23 +36,13 @@ function SettingsPanel() {
 
       <select
         value={settings.layout}
-        onChange={(e) =>
-          updateSetting(
-            "layout",
-            e.target.value
-          )
-        }
+        onChange={(e) => updateSetting("layout", e.target.value)}
       >
-        {Object.entries(layouts).map(
-          ([layoutId, layout]) => (
-            <option
-              key={layoutId}
-              value={layoutId}
-            >
-              {layout.name}
-            </option>
-          )
-        )}
+        {Object.entries(layouts).map(([layoutId, layout]) => (
+          <option key={layoutId} value={layoutId}>
+            {layout.name}
+          </option>
+        ))}
       </select>
 
       <hr />
@@ -68,50 +51,29 @@ function SettingsPanel() {
 
       <input
         value={settings.message}
-        onChange={(e) =>
-          updateSetting(
-            "message",
-            e.target.value
-          )
-        }
+        onChange={(e) => updateSetting("message", e.target.value)}
       />
 
       <label>Button Text</label>
 
       <input
         value={settings.buttonText}
-        onChange={(e) =>
-          updateSetting(
-            "buttonText",
-            e.target.value
-          )
-        }
+        onChange={(e) => updateSetting("buttonText", e.target.value)}
       />
 
       <label>Button URL</label>
 
       <input
         value={settings.buttonUrl}
-        onChange={(e) =>
-          updateSetting(
-            "buttonUrl",
-            e.target.value
-          )
-        }
+        onChange={(e) => updateSetting("buttonUrl", e.target.value)}
       />
 
       <label>
         <input
           type="checkbox"
           checked={settings.showButton}
-          onChange={(e) =>
-            updateSetting(
-              "showButton",
-              e.target.checked
-            )
-          }
+          onChange={(e) => updateSetting("showButton", e.target.checked)}
         />
-
         Show Button
       </label>
 
@@ -123,15 +85,8 @@ function SettingsPanel() {
 
       <input
         type="color"
-        value={
-          settings.colors.background
-        }
-        onChange={(e) =>
-          updateColor(
-            "background",
-            e.target.value
-          )
-        }
+        value={settings.colors.background}
+        onChange={(e) => updateColor("background", e.target.value)}
       />
 
       <label>Text Color</label>
@@ -139,27 +94,15 @@ function SettingsPanel() {
       <input
         type="color"
         value={settings.colors.text}
-        onChange={(e) =>
-          updateColor(
-            "text",
-            e.target.value
-          )
-        }
+        onChange={(e) => updateColor("text", e.target.value)}
       />
 
       <label>Button Color</label>
 
       <input
         type="color"
-        value={
-          settings.colors.button
-        }
-        onChange={(e) =>
-          updateColor(
-            "button",
-            e.target.value
-          )
-        }
+        value={settings.colors.button}
+        onChange={(e) => updateColor("button", e.target.value)}
       />
 
       <hr />
@@ -177,7 +120,6 @@ function SettingsPanel() {
             })
           }
         />
-
         Enable API Data
       </label>
 
@@ -197,22 +139,13 @@ function SettingsPanel() {
 
       <button
         type="button"
-        disabled={
-          !settings.api.url ||
-          loading
-        }
+        disabled={!settings.api.url || loading}
         onClick={handleTestApi}
       >
-        {loading
-          ? "Testing..."
-          : "Test API"}
+        {loading ? "Testing..." : "Test API"}
       </button>
 
-      {error && (
-        <p>
-          API Error: {error}
-        </p>
-      )}
+      {error && <p>API Error: {error}</p>}
     </div>
   );
 }
