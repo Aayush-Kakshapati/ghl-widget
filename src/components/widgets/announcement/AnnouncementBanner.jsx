@@ -1,53 +1,25 @@
 import { useWidgetData } from "../../../hooks/useWidgetData";
+import { widgetRegistry } from "../registry";
 
 function AnnouncementBanner({ settings }) {
-  const { data, error } = useWidgetData(settings.api);
+  const { items, loading, error } = useWidgetData(settings.api?.url);
 
-  const message =
-    data?.message ?? settings.message;
+  const layoutConfig = widgetRegistry.announcement.layouts[settings.layout];
+  const LayoutComponent = layoutConfig?.component;
 
-  const buttonText =
-    data?.buttonText ?? settings.buttonText;
-
-  const buttonUrl =
-    data?.buttonUrl ?? settings.buttonUrl;
-
-  if (error) {
-    console.warn(
-      "API failed. Using local widget settings."
-    );
+  if (loading) {
+    return <div className="ghl-widget-status">Loading…</div>;
   }
 
-  return (
-    <div
-      className={`announcement-banner layout-${settings.layout}`}
-      style={{
-        backgroundColor:
-          settings.colors.background,
-        color:
-          settings.colors.text,
-      }}
-    >
-      <span className="banner-message">
-        {message}
-      </span>
+  if (error) {
+    return <div className="ghl-widget-status">Couldn't load data: {error}</div>;
+  }
 
-      {settings.showButton && (
-        <a
-          className="banner-button"
-          href={buttonUrl}
-          target="_blank"
-          rel="noreferrer"
-          style={{
-            backgroundColor:
-              settings.colors.button,
-          }}
-        >
-          {buttonText}
-        </a>
-      )}
-    </div>
-  );
+  if (!LayoutComponent) {
+    return <div className="ghl-widget-status">Unknown layout: {settings.layout}</div>;
+  }
+
+  return <LayoutComponent items={items} />;
 }
 
 export default AnnouncementBanner;

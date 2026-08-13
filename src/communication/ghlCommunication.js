@@ -6,13 +6,13 @@ export function initializeGHL(onElementStore) {
   handshake.then((parent) => {
     console.log("Connected to HighLevel");
 
-    console.log("HighLevel parent model:", parent?.model);
-
     const elementStore = parent?.model?.elementStore;
 
-    console.log("Received elementStore:", elementStore);
+    console.log("HighLevel parent model:", parent?.model);
 
     if (elementStore) {
+      console.log("Received elementStore:", elementStore);
+
       onElementStore(elementStore);
     }
   });
