@@ -5,10 +5,15 @@ function Preview() {
   const settings = useWidgetStore((state) => state.settings);
 
   return (
-    <div>
+    <div style={{
+      maxHeight: "50%",
+      maxWidth: "100%",
+    }}>
       <h2>Preview</h2>
 
       <p>Layout: {settings.layout}</p>
+
+      <p>No of visible Items: {settings.items_num} </p>
 
       {settings.type === "announcement" && (
         <AnnouncementBanner settings={settings} />

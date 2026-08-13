@@ -11,6 +11,7 @@ export function useWidgetData(url) {
     if (!url) {
       setData(null);
       setError(null);
+      setLoading(false);
       return;
     }
 

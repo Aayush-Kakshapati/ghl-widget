@@ -7,6 +7,9 @@ function AnnouncementBanner({ settings }) {
   const layoutConfig = widgetRegistry.announcement.layouts[settings.layout];
   const LayoutComponent = layoutConfig?.component;
 
+  const visibleItems = items.slice(0, Number(settings.items_num));
+
+
   if (loading) {
     return <div className="ghl-widget-status">Loading…</div>;
   }
@@ -19,7 +22,7 @@ function AnnouncementBanner({ settings }) {
     return <div className="ghl-widget-status">Unknown layout: {settings.layout}</div>;
   }
 
-  return <LayoutComponent items={items} />;
+  return <LayoutComponent items={visibleItems} />;
 }
 
 export default AnnouncementBanner;

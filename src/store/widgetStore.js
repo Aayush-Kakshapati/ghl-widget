@@ -3,6 +3,7 @@ import { create } from "zustand";
 const defaultSettings = {
   type: "announcement",
   layout: "list",
+  items_num: 6,
 
   api: {
     url: "https://dummyjson.com/users",

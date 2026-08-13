@@ -24,6 +24,18 @@ function SettingsPanel() {
           </option>
         ))}
       </select>
+
+      <hr/>
+
+      <label>No. of Items</label>
+      <input
+        type="number"
+        min="1"
+        value={settings.items_num}
+        onChange={(e) =>
+          updateSetting("items_num", Number(e.target.value))
+        }
+      />
     </div>
   );
 }
