@@ -1,14 +1,3 @@
-// createJs.js
-//
-// Generates the vanilla-JS runtime that ships inside the published GHL
-// embed. It mirrors the exact same pipeline as the React preview:
-//   fetch(api.url) -> normalize into {id,title,subtitle,image} -> render by layout
-//
-// `settings` here is the same elementStore object the React app edits, so
-// normalizer coverage only needs to be maintained in one mental model even
-// though this is a separate JS runtime (no bundler/imports available inside
-// the embed, so it's inlined as a string).
-
 export function createJs(settings) {
   const settingsJson = JSON.stringify(settings);
 
