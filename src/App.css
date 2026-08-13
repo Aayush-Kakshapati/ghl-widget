@@ -31,11 +31,13 @@
 .ghl-widget.layout-small-carousel,
 .ghl-widget.layout-carousel,
 .ghl-widget.layout-full-carousel {
-  max-width: 700px;
+  width: 100vh;
   display: flex;
   overflow-x: auto;
   gap: 16px;
+  scroll-behavior: auto;
 }
+
 
 .ghl-widget.layout-small-carousel .ghl-widget-item {
   min-width: 180px;

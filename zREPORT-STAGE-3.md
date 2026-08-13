@@ -55,7 +55,7 @@ component ever changes.
                           │
                  (Postmate handshake)
                           ▼
-              ghlCommunication.js
+                  ghlCommunication.js
                           │
                           ▼
                       App.jsx
@@ -72,7 +72,7 @@ component ever changes.
       AnnouncementBanner.jsx
               │
               ▼
-       useWidgetData.js  ──────►  apiService.js  ──────►  fetch(url)
+      useWidgetData.js  ──────►  apiService.js  ──────►  fetch(url)
               │                        │
               │                 (raw API response)
               │                        │
