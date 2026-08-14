@@ -12,6 +12,24 @@ function SettingsPanel() {
     <div>
       <h2>Widget Settings</h2>
 
+      <label>Title: </label>
+      <input
+        type="text"
+        defaultValue={settings.title}
+        onChange={(e) => updateSetting("title", e.target.value)}
+      />
+
+      <hr />
+
+      <label>Description: </label>
+      <input
+        type="text"
+        defaultValue={settings.description}
+        onChange={(e) => updateSetting("description", e.target.value)}
+      />
+
+      <hr />
+
       <label>Display Layout: </label>
 
       <select

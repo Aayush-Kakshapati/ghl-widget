@@ -2,6 +2,8 @@ import { create } from "zustand";
 
 const defaultSettings = {
   type: "announcement",
+  title: "",
+  description: "",
   layout: "list",
   items_num: 3,
   set_ghlpreview_visible: false,

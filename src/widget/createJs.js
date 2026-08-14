@@ -70,6 +70,19 @@ function renderItem(item) {
     return card;
   }
 
+  function renderTitleDesc(){
+    var title = document.createElement("h1");
+    title.textContent = settings.title;
+    var description = document.createElement("p");
+    description.textContent = settings.description;
+
+    var titleDesc = document.createElement("div");
+
+    titleDesc.appendChild(title);
+    titleDesc.appendChild(description);
+    return titleDesc;
+  }
+
   function layoutClassName(layout) {
     switch (layout) {
       case "list": return "ghl-widget ghl-widget-list layout-list";
@@ -78,12 +91,15 @@ function renderItem(item) {
       case "carousel": return "ghl-widget layout-carousel";
       case "full-carousel": return "ghl-widget layout-full-carousel";
       default: return "ghl-widget layout-list";
-    }wh
+    }
   }
 
   function render(items) {
     root.className = layoutClassName(settings.layout);
     root.innerHTML = "";
+
+    root.appendChild(renderTitleDesc());
+
     items.slice(0, settings.items_num).forEach(function (item) {
       root.appendChild(renderItem(item));
     });

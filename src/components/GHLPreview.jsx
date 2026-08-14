@@ -6,8 +6,7 @@ function GHLPreview({ previewUrl, widget }) {
         <head>
           <meta charset="UTF-8" />
           <style>
-          
-            body { width:90%; margin: 10; padding: 12px; font-family: sans-serif; }
+            body { margin: 0; padding: 12px; font-family: sans-serif; }
           </style>
         </head>
         <body>

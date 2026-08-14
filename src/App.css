@@ -19,7 +19,7 @@
 .preview-column {
   flex: 1 1 0;
   min-width: 0;
-  width: 0;
+  width: 100%;
 }
 
 .ghl-preview {
@@ -215,8 +215,8 @@
   }
 
   .ghl-widget.layout-carousel .ghl-widget-item {
-    flex-basis: min(180px, 80vw);
-    max-width: min(180px, 80vw);
+    flex-basis: min(180px, 80%);
+    max-width: min(180px, 80%);
     max-height: 180px;
   }
 
