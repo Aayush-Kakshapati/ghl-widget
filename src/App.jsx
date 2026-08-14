@@ -38,21 +38,20 @@ function App() {
   return (
     <>
       <div className="app-layout">
-        <>
-          <div className="settings-column">
-            <SettingsPanel />
-          </div>
+        <div className="settings-column">
+          <SettingsPanel />
+        </div>
 
-          {settings.set_preview_visible && (
-            <div className="preview-column">
-              <Preview />
-            </div>
-          )}
-        </>
+        {settings.set_preview_visible && (
+          <div className="preview-column">
+            <Preview />
+          </div>
+        )}
       </div>
-      {settings.set_preview_visible && (
+
+      {settings.set_ghlpreview_visible && (
         <div className="preview-column">
-          <GHLPreview />
+          <GHLPreview  widget={widget}/>
         </div>
       )}
     </>
