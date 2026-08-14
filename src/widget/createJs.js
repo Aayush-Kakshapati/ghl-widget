@@ -66,7 +66,6 @@ function renderItem(item) {
       subtitle.textContent = item.subtitle;
       textWrap.appendChild(subtitle);
     }
-
     card.appendChild(textWrap);
     return card;
   }
@@ -79,15 +78,16 @@ function renderItem(item) {
       case "carousel": return "ghl-widget layout-carousel";
       case "full-carousel": return "ghl-widget layout-full-carousel";
       default: return "ghl-widget layout-list";
-    }
+    }wh
   }
 
   function render(items) {
     root.className = layoutClassName(settings.layout);
     root.innerHTML = "";
-    items.forEach(function (item) {
+    items.slice(0, settings.items_num).forEach(function (item) {
       root.appendChild(renderItem(item));
     });
+
   }
 
   var url = settings.api && settings.api.url;
