@@ -20,7 +20,6 @@ function GHLPreview({ previewUrl, widget }) {
   return (
     <div className="ghl-preview">
       <iframe
-        src={previewUrl || undefined}
         srcDoc={previewDoc || undefined}
         title="GHL Widget Preview"
         width="100%"

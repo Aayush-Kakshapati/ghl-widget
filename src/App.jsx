@@ -31,21 +31,31 @@ function App() {
     sendToGHL(widget);
   }, [settings, widget]);
 
-  return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          gap: "40px",
-          padding: "40px",
-        }}
-      >
-        <SettingsPanel />
+  if (!settings) {
+    return null;
+  }
 
-        {settings.set_preview_visible && <Preview />}
+  return (
+    <>
+      <div className="app-layout">
+        <>
+          <div className="settings-column">
+            <SettingsPanel />
+          </div>
+
+          {settings.set_preview_visible && (
+            <div className="preview-column">
+              <Preview />
+            </div>
+          )}
+        </>
       </div>
-      <div>{settings.set_ghlpreview_visible && <GHLPreview widget={widget} />}</div>
-    </div>
+      {settings.set_preview_visible && (
+        <div className="preview-column">
+          <GHLPreview />
+        </div>
+      )}
+    </>
   );
 }
 

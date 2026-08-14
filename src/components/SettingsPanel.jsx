@@ -54,7 +54,7 @@ function SettingsPanel() {
       <label className="toggle">
         <input
           type="checkbox"
-          checked={settings.set_ghlpreivew_visible}
+          checked={settings.set_ghlpreview_visible}
           onChange={(e) =>
             updateSetting("set_ghlpreview_visible", e.target.checked)
           }

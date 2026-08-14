@@ -5,9 +5,7 @@ function Preview() {
   const settings = useWidgetStore((state) => state.settings);
 
   return (
-    <div style={{
-
-    }}>
+    <div>
       <h2>Preview</h2>
 
       <p>Layout: {settings.layout}</p>

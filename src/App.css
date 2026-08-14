@@ -1,57 +1,226 @@
+/* Main app layout */
+.app-layout {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  gap: 40px;
+  padding: 40px;
+  overflow: hidden;
+}
+
+/* Settings column */
+.settings-column {
+  flex: 0 1 320px;
+  width: 320px;
+  min-width: 0;
+}
+
+/* Preview column */
+.preview-column {
+  flex: 1 1 0;
+  min-width: 0;
+  width: 0;
+}
+
+/* Widget */
 .ghl-widget {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   box-sizing: border-box;
 }
 
+/* List */
 .ghl-widget-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  max-height: 420px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 0;
+  min-height: 0;
 }
 
+
+.ghl-widget-list .ghl-widget-item {
+  width: 100%;
+  max-width: 100%;
+
+  /* Important: don't let list items shrink */
+  flex: 0 0 auto;
+  flex-shrink: 0;
+}
+
+/* Grid */
 .ghl-widget-grid {
   display: grid;
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
   gap: 16px;
+  width: 100%;
+  max-width: 100%;
+  max-height: 420px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 0;
 }
 
+/* Items */
 .ghl-widget-item {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: 16px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background: #fff;
   overflow: hidden;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex-shrink: 1;
 }
 
+/* Carousels */
 .ghl-widget.layout-small-carousel,
 .ghl-widget.layout-carousel,
 .ghl-widget.layout-full-carousel {
-  width: 100vh;
   display: flex;
-  overflow-x: auto;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
   gap: 16px;
-  scroll-behavior: auto;
+  align-items: stretch;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  /* Prevent scrollbar from affecting layout */
+  scrollbar-width: thin;
 }
 
-
+/* Small carousel */
 .ghl-widget.layout-small-carousel .ghl-widget-item {
-  min-width: 180px;
+  flex: 0 0 clamp(150px, 25%, 180px);
+  width: auto;
+  max-width: 180px;
+  max-height: 220px;
 }
 
+/* Normal carousel */
 .ghl-widget.layout-carousel .ghl-widget-item {
-  min-width: 280px;
+  flex: 0 0 clamp(220px, 40%, 280px);
+  width: auto;
+  max-width: 280px;
+  max-height: 280px;
 }
 
+/* Full carousel */
 .ghl-widget.layout-full-carousel .ghl-widget-item {
-  min-width: 100%;
+  flex: 0 0 100%;
+  width: 100%;
+  max-width: 100%;
+  max-height: 300px;
 }
 
+/* ------------------------- */
+/* Tablet */
+/* ------------------------- */
 
+@media (max-width: 900px) {
+  .app-layout {
+    gap: 24px;
+    padding: 24px;
+  }
+
+  .settings-column {
+    flex: 0 1 260px;
+    width: 260px;
+  }
+
+  .ghl-widget-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
+  }
+}
+
+/* ------------------------- */
+/* Mobile */
+/* ------------------------- */
+
+@media (max-width: 768px) {
+  .app-layout {
+    flex-direction: column;
+    gap: 24px;
+    padding: 20px;
+    overflow: visible;
+  }
+
+  .settings-column,
+  .preview-column {
+    width: 100%;
+    max-width: 100%;
+    flex: none;
+  }
+
+  .ghl-widget-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+  }
+
+  .ghl-widget.layout-small-carousel .ghl-widget-item {
+    flex-basis: 150px;
+    max-width: 150px;
+    max-height: 180px;
+  }
+
+  .ghl-widget.layout-carousel .ghl-widget-item {
+    flex-basis: 220px;
+    max-width: 220px;
+    max-height: 220px;
+  }
+
+  .ghl-widget-item {
+    padding: 12px;
+  }
+}
+
+/* ------------------------- */
+/* Small mobile */
+/* ------------------------- */
+
+@media (max-width: 480px) {
+  .app-layout {
+    padding: 16px;
+  }
+
+  .ghl-widget-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ghl-widget.layout-small-carousel .ghl-widget-item {
+    flex-basis: 120px;
+    max-width: 120px;
+    max-height: 150px;
+  }
+
+  .ghl-widget.layout-carousel .ghl-widget-item {
+    flex-basis: min(180px, 80vw);
+    max-width: min(180px, 80vw);
+    max-height: 180px;
+  }
+
+  .ghl-widget-item {
+    padding: 10px;
+    gap: 4px;
+  }
+}
+
+/* Toggle */
 .toggle {
   display: flex;
   align-items: center;
@@ -66,6 +235,7 @@
 .slider {
   width: 40px;
   height: 22px;
+  flex: 0 0 40px;
   background: #ccc;
   border-radius: 20px;
   position: relative;
@@ -84,10 +254,10 @@
   transition: 0.2s;
 }
 
-.toggle input:checked+.slider {
+.toggle input:checked + .slider {
   background: #4f46e5;
 }
 
-.toggle input:checked+.slider::before {
+.toggle input:checked + .slider::before {
   transform: translateX(18px);
 }
