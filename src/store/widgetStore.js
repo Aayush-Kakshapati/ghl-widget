@@ -3,7 +3,9 @@ import { create } from "zustand";
 const defaultSettings = {
   type: "announcement",
   layout: "list",
-  items_num: 6,
+  items_num: 3,
+  set_ghlpreview_visible: false,
+  set_preview_visible: false,
 
   api: {
     url: "https://dummyjson.com/users",

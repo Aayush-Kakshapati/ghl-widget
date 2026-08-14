@@ -6,8 +6,7 @@ function Preview() {
 
   return (
     <div style={{
-      maxHeight: "50%",
-      maxWidth: "100%",
+
     }}>
       <h2>Preview</h2>
 

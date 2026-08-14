@@ -50,3 +50,44 @@
 .ghl-widget.layout-full-carousel .ghl-widget-item {
   min-width: 100%;
 }
+
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.toggle input {
+  display: none;
+}
+
+.slider {
+  width: 40px;
+  height: 22px;
+  background: #ccc;
+  border-radius: 20px;
+  position: relative;
+  transition: 0.2s;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 2px;
+  top: 2px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.toggle input:checked+.slider {
+  background: #4f46e5;
+}
+
+.toggle input:checked+.slider::before {
+  transform: translateX(18px);
+}

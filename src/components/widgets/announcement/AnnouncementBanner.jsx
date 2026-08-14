@@ -1,5 +1,6 @@
 import { useWidgetData } from "../../../hooks/useWidgetData";
 import { widgetRegistry } from "../registry";
+import { useWidgetStore } from "../../../store/widgetStore";
 
 function AnnouncementBanner({ settings }) {
   const { items, loading, error } = useWidgetData(settings.api?.url);
@@ -8,7 +9,6 @@ function AnnouncementBanner({ settings }) {
   const LayoutComponent = layoutConfig?.component;
 
   const visibleItems = items.slice(0, Number(settings.items_num));
-
 
   if (loading) {
     return <div className="ghl-widget-status">Loading…</div>;
@@ -19,10 +19,16 @@ function AnnouncementBanner({ settings }) {
   }
 
   if (!LayoutComponent) {
-    return <div className="ghl-widget-status">Unknown layout: {settings.layout}</div>;
+    return (
+      <div className="ghl-widget-status">Unknown layout: {settings.layout}</div>
+    );
   }
 
-  return <LayoutComponent items={visibleItems} />;
+  return (
+    <div>
+      <LayoutComponent items={visibleItems} />
+    </div>
+  );
 }
 
 export default AnnouncementBanner;

@@ -9,10 +9,15 @@ import { initializeGHL, sendToGHL } from "./communication/ghlCommunication";
 
 import { generateWidget } from "./widget/generateWidget";
 
+import GHLPreview from "./components/GHLPreview";
+
 function App() {
   const settings = useWidgetStore((state) => state.settings);
+  const widget = settings ? generateWidget(settings) : null;
 
-  const setSettingsFromGHL = useWidgetStore((state) => state.setSettingsFromGHL);
+  const setSettingsFromGHL = useWidgetStore(
+    (state) => state.setSettingsFromGHL,
+  );
 
   useEffect(() => {
     initializeGHL((elementStore) => {
@@ -23,22 +28,23 @@ function App() {
   useEffect(() => {
     if (!settings) return;
 
-    const widget = generateWidget(settings);
-
     sendToGHL(widget);
-  }, [settings]);
+  }, [settings, widget]);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        gap: "40px",
-        padding: "40px",
-      }}
-    >
-      <SettingsPanel />
+    <div>
+      <div
+        style={{
+          display: "flex",
+          gap: "40px",
+          padding: "40px",
+        }}
+      >
+        <SettingsPanel />
 
-      <Preview />
+        {settings.set_preview_visible && <Preview />}
+      </div>
+      <div>{settings.set_ghlpreview_visible && <GHLPreview widget={widget} />}</div>
     </div>
   );
 }
