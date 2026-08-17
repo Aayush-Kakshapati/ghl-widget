@@ -1,12 +1,18 @@
-import WidgetItemCard from "./WidgetItemCard";
+import BaseCarousel from "./BaseCarousel";
+import { useWidgetStore } from "../../../../store/widgetStore";
 
 function SmallCarouselLayout({ items }) {
+  const animation = useWidgetStore((state) => state.settings.carousel_animation);
+  const speed = useWidgetStore((state) => state.settings.carousel_speed);
+
   return (
-    <div className="ghl-widget layout-small-carousel">
-      {items.map((item) => (
-        <WidgetItemCard key={item.id} item={item} />
-      ))}
-    </div>
+    <BaseCarousel
+      items={items}
+      layoutClassName="ghl-widget layout-small-carousel"
+      animation={animation}
+      speed={speed}
+      batchSize={4}
+    />
   );
 }
 

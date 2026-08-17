@@ -2,7 +2,7 @@ export function createHtml(settings) {
   return `
     <div
       id="ghl-widget"
-      class="ghl-widget layout-${settings.layout}"
+      class="ghl-widget-root"
     ></div>
   `;
 }

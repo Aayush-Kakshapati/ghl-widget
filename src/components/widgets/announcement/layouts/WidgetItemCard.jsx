@@ -1,6 +1,6 @@
-function WidgetItemCard({ item }) {
+function WidgetItemCard({ item, style }) {
   return (
-    <div className="ghl-widget-item">
+    <div className="ghl-widget-item" style={style}>
       {item.image && (
         <img
           src={item.image}

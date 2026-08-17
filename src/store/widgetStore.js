@@ -9,6 +9,9 @@ const defaultSettings = {
   set_ghlpreview_visible: false,
   set_preview_visible: false,
 
+  carousel_animation: "none", // "none" | "loop" | "batch"
+  carousel_speed: 5, // 1 (slow) - 10 (fast)
+
   api: {
     url: "https://dummyjson.com/users",
   },

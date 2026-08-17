@@ -29,6 +29,40 @@
   box-sizing: border-box;
 }
 
+/* Widget root wrapper (only used by the standalone GHL embed).
+   Stacks the title/description above the layout body so the two
+   never compete for the same flex/grid row. */
+.ghl-widget-root {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.ghl-widget-header {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.ghl-widget-header h1 {
+  margin: 0 0 4px;
+  font-size: 1.25rem;
+}
+
+.ghl-widget-header p {
+  margin: 0;
+  color: #555;
+}
+
+.ghl-widget-status {
+  padding: 16px;
+  color: #555;
+}
+
 /* Widget */
 .ghl-widget {
   width: 100%;
@@ -133,6 +167,90 @@
   width: 100%;
   max-width: 100%;
   max-height: 300px;
+}
+
+/* Carousel animations */
+
+/* Smooth loop: track scrolls continuously, items list is duplicated
+   once so it can wrap seamlessly at -50%. */
+.ghl-widget.carousel-anim-loop {
+  overflow: hidden;
+}
+
+.carousel-loop-track {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  animation: carousel-loop-scroll var(--carousel-loop-duration, 20s) linear infinite;
+}
+
+.ghl-widget.carousel-anim-loop:hover .carousel-loop-track {
+  animation-play-state: paused;
+}
+
+@keyframes carousel-loop-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Batch slide: the whole visible batch slides out and the next
+   batch slides in "on a beat". */
+.ghl-widget.carousel-anim-batch {
+  overflow: hidden;
+}
+
+.carousel-batch-track {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.carousel-batch-track.is-entering {
+  animation: carousel-batch-enter 0.45s ease-out;
+}
+
+.carousel-batch-track.is-leaving {
+  animation: carousel-batch-leave 0.45s ease-in forwards;
+}
+
+@keyframes carousel-batch-enter {
+  from {
+    transform: translateX(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes carousel-batch-leave {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-40px);
+    opacity: 0;
+  }
+}
+
+/* Note: full-carousel items use a % flex-basis normally, which can't
+   resolve correctly inside the loop track (width: max-content). For
+   that combination, BaseCarousel measures the container in JS and
+   applies an inline pixel width instead of relying on CSS alone.
+   The batch track stays width:100%, so % basis works fine there. */
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-loop-track,
+  .carousel-batch-track.is-entering,
+  .carousel-batch-track.is-leaving {
+    animation: none !important;
+  }
 }
 
 /* ------------------------- */

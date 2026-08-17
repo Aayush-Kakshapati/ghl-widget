@@ -8,6 +8,10 @@ function SettingsPanel() {
 
   const layouts = widgetRegistry.announcement.layouts;
 
+  const isCarouselLayout = ["small-carousel", "carousel", "full-carousel"].includes(
+    settings.layout
+  );
+
   return (
     <div>
       <h2>Widget Settings</h2>
@@ -44,6 +48,40 @@ function SettingsPanel() {
       </select>
 
       <hr />
+
+      {isCarouselLayout && (
+        <>
+          <label>Animation Style: </label>
+          <select
+            value={settings.carousel_animation}
+            onChange={(e) => updateSetting("carousel_animation", e.target.value)}
+          >
+            <option value="none">None</option>
+            <option value="loop">Smooth Loop (continuous scroll)</option>
+            <option value="batch">Batch Slide (takes over in a beat)</option>
+          </select>
+
+          <hr />
+
+          {settings.carousel_animation !== "none" && (
+            <>
+              <label>Animation Speed: </label>
+              <input
+                type="range"
+                min="1"
+                max="10"
+                value={settings.carousel_speed}
+                onChange={(e) =>
+                  updateSetting("carousel_speed", Number(e.target.value))
+                }
+              />
+              <span style={{ marginLeft: 8 }}>{settings.carousel_speed}</span>
+
+              <hr />
+            </>
+          )}
+        </>
+      )}
 
       <label>No. of Items: </label>
       <input
