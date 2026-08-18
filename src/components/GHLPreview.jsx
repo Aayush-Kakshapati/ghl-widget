@@ -3,7 +3,11 @@ import { useEffect, useRef } from "react";
 function GHLPreview({ widget }) {
   const iframeRef = useRef(null);
 
-
+  // Only rebuild srcDoc (which fully reloads the iframe) when the
+  // layout or API url changes - those need a fresh DOM structure and
+  // a fresh fetch. Everything else (title, description, animation,
+  // speed, items_num) is pushed into the already-loaded iframe via
+  // postMessage so it re-renders in place instead of flickering.
   const structuralKey = widget
     ? `${widget.elementStore?.layout}::${widget.elementStore?.api?.url}`
     : "";
@@ -31,7 +35,10 @@ function GHLPreview({ widget }) {
     const iframe = iframeRef.current;
     if (!iframe) return;
 
-  
+    // The very first mount for a given structuralKey is already loading
+    // these settings via srcDoc/initial fetch - skip that redundant post.
+    // For every subsequent settings change (same key, iframe already
+    // loaded), push the update in instead of letting srcDoc change.
     const postUpdate = () => {
       iframe.contentWindow?.postMessage(
         { type: "ghl-widget-settings-update", settings: widget.elementStore },
@@ -42,6 +49,8 @@ function GHLPreview({ widget }) {
     if (iframe.dataset.loadedKey === structuralKey) {
       postUpdate();
     } else {
+      // First load for this iframe instance: let srcDoc's own initial
+      // fetch run, just mark it as loaded once ready.
       const handleLoad = () => {
         iframe.dataset.loadedKey = structuralKey;
       };

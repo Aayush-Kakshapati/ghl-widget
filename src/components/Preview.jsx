@@ -5,19 +5,30 @@ function Preview() {
   const settings = useWidgetStore((state) => state.settings);
 
   return (
-    <div>
+    <div className="preview-panel">
       <h2>Preview</h2>
 
-      {settings.title ? <p>{settings.title}</p> : null}
-      {settings.description ? <p>{settings.description}</p> : null}
+      <div className="preview-surface">
+        {settings.title ? (
+          <h3 className="preview-heading">{settings.title}</h3>
+        ) : null}
+        {settings.description ? (
+          <p className="preview-description">{settings.description}</p>
+        ) : null}
 
-      <p>Layout: {settings.layout}</p>
+        <div className="preview-meta">
+          <span className="preview-meta-item">
+            Layout: <strong>{settings.layout}</strong>
+          </span>
+          <span className="preview-meta-item">
+            Visible items: <strong>{settings.items_num}</strong>
+          </span>
+        </div>
 
-      <p>No of visible Items: {settings.items_num} </p>
-
-      {settings.type === "announcement" && (
-        <AnnouncementBanner settings={settings} />
-      )}
+        {settings.type === "announcement" && (
+          <AnnouncementBanner settings={settings} />
+        )}
+      </div>
     </div>
   );
 }

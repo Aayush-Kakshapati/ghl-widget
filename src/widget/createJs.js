@@ -89,7 +89,11 @@ function renderItem(item) {
     return titleDesc;
   }
 
- function getBodyEl() {
+  // Ensures #ghl-widget has a stable structure:
+  //   #ghl-widget (plain block wrapper, never gets layout/flex classes)
+  //     .ghl-widget-header (title/description)
+  //     .ghl-widget-body (gets the layout-specific class: flex/grid/carousel track)
+  function getBodyEl() {
     root.className = "ghl-widget-root";
     var body = root.querySelector(".ghl-widget-body");
     if (!body) {
@@ -113,6 +117,8 @@ function renderItem(item) {
   var CAROUSEL_LAYOUTS = ["small-carousel", "carousel", "full-carousel"];
   var BATCH_SIZES = { "small-carousel": 4, carousel: 3, "full-carousel": 1 };
 
+  // Classes applied to .ghl-widget-body (the layout track), matching
+  // what the React preview applies to its own layout root.
   function baseLayoutClassName(layout) {
     switch (layout) {
       case "list": return "ghl-widget-body ghl-widget ghl-widget-list layout-list";
@@ -124,6 +130,7 @@ function renderItem(item) {
     }
   }
 
+  // Maps the 1-10 speed setting to real durations, matching the React preview.
   function speedToLoopDuration(speed) {
     var clamped = Math.min(10, Math.max(1, Number(speed) || 5));
     return 40 - (clamped - 1) * ((40 - 6) / 9);
@@ -160,11 +167,13 @@ function renderItem(item) {
         speedToLoopDuration(settings.carousel_speed) + "s"
       );
 
+      // Duplicate items once so the track can scroll -50% and loop seamlessly.
       var loopItems = items.concat(items);
       loopItems.forEach(function (item) {
         var card = renderItem(item);
         if (settings.layout === "full-carousel") {
-        
+          // % flex-basis can't resolve against width:max-content, so
+          // size items to the measured container width instead.
           var width = body.clientWidth || body.getBoundingClientRect().width;
           if (width) {
             card.style.flex = "0 0 " + width + "px";
@@ -179,6 +188,7 @@ function renderItem(item) {
       return;
     }
 
+    // Plain static render (no animation)
     body.className = className;
     body.innerHTML = "";
     items.forEach(function (item) {
@@ -222,6 +232,7 @@ function renderItem(item) {
       var leaveDelay = Math.min(500, intervalMs * 0.4);
 
       batchTimer = setInterval(function () {
+        // play "leaving" animation on current batch
         var track = body.querySelector(".carousel-batch-track");
         if (track) track.className = "carousel-batch-track is-leaving";
 
@@ -278,6 +289,11 @@ function renderItem(item) {
       });
   }
 
+  // Live updates: instead of the parent page reloading this iframe's
+  // whole document on every settings change (title, description, speed,
+  // items_num, animation style), it posts the new settings in and we
+  // just re-render in place - no reload, no re-fetch, no flicker.
+  // A structural change (layout or API url) still needs a fresh fetch.
   window.addEventListener("message", function (event) {
     var data = event && event.data;
     if (!data || data.type !== "ghl-widget-settings-update" || !data.settings) return;

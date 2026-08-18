@@ -1,423 +1,522 @@
 /* =========================================================
-   DESIGN TOKENS
+   Design tokens
    ========================================================= */
-
 :root {
-  --builder-bg: #f6f7f9;
-  --surface: #ffffff;
-  --surface-subtle: #fafbfc;
+  /* Surfaces */
+  --surface-canvas: #f6f7f9;
+  --surface-card: #ffffff;
+  --surface-sunken: #f1f2f5;
 
-  --border: #e5e7eb;
-  --border-strong: #d9dde5;
+  /* Borders */
+  --border-subtle: #e4e6eb;
+  --border-default: #dcdfe5;
+  --border-strong: #c7cbd4;
 
-  --text: #171a1f;
-  --text-secondary: #667085;
-  --text-muted: #98a2b3;
+  /* Text */
+  --text-primary: #16181d;
+  --text-secondary: #565b66;
+  --text-tertiary: #8a8f9b;
 
-  --accent: #4f46e5;
-  --accent-hover: #4338ca;
-  --accent-soft: rgba(79, 70, 229, 0.08);
+  /* Accent - indigo, used sparingly for interactive/active states */
+  --accent-50: #eef0fe;
+  --accent-100: #dfe3fd;
+  --accent-400: #6366f1;
+  --accent-500: #4f46e5;
+  --accent-600: #4338ca;
 
-  --danger: #dc2626;
+  /* Elevation */
+  --shadow-xs: 0 1px 2px rgba(16, 18, 26, 0.04);
+  --shadow-sm: 0 1px 3px rgba(16, 18, 26, 0.06), 0 1px 2px rgba(16, 18, 26, 0.04);
+  --shadow-md: 0 4px 12px rgba(16, 18, 26, 0.08), 0 1px 2px rgba(16, 18, 26, 0.04);
+  --shadow-focus: 0 0 0 3px var(--accent-100);
 
+  /* Radius */
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: 12px;
+  --radius-lg: 14px;
 
-  --shadow-sm:
-    0 1px 2px rgba(16, 24, 40, 0.04),
-    0 1px 3px rgba(16, 24, 40, 0.06);
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
 
-  --shadow-md:
-    0 4px 12px rgba(16, 24, 40, 0.06),
-    0 1px 3px rgba(16, 24, 40, 0.05);
-
-  --transition-fast: 150ms ease;
-  --transition-normal: 200ms ease;
+  /* Type */
+  --font-sans:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--surface-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Focus ring - consistent, visible, keyboard-first */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+  border-radius: var(--radius-sm);
+}
 
 /* =========================================================
-   BUILDER SHELL
+   App shell
    ========================================================= */
-
 .app-layout {
   width: 100%;
   max-width: 100%;
-  min-height: 100vh;
-
   display: flex;
-  align-items: flex-start;
-
-  gap: 28px;
-  padding: 28px;
-
-  box-sizing: border-box;
-
-  background: var(--builder-bg);
-
+  gap: 32px;
+  padding: 32px;
   overflow: hidden;
+  align-items: flex-start;
 }
 
-
-/* =========================================================
-   SETTINGS PANEL
-   ========================================================= */
-
+/* Settings column */
 .settings-column {
   flex: 0 1 320px;
   width: 320px;
   min-width: 0;
-
-  background: var(--surface);
-
-  border: 1px solid var(--border);
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-
   box-shadow: var(--shadow-sm);
-
-  overflow: hidden;
+  padding: 20px;
+  position: sticky;
+  top: 32px;
 }
 
+.panel-header {
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin: 0 0 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-subtle);
+}
 
-/* Give controls inside the settings panel a consistent rhythm */
+/* Field groups - replaces stray <hr> spacers with real rhythm */
+.field {
+  margin-bottom: 18px;
+}
 
-.settings-column input,
+.field:last-child {
+  margin-bottom: 0;
+}
+
+.field-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.field-hint {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 6px;
+}
+
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.field-row input[type="range"] {
+  flex: 1 1 auto;
+}
+
+.field-row .field-value {
+  flex: 0 0 auto;
+  min-width: 22px;
+  text-align: right;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
 .settings-column select,
+.settings-column input[type="text"],
+.settings-column input[type="number"],
+.settings-column input[type="url"],
 .settings-column textarea {
-  box-sizing: border-box;
   width: 100%;
-
-  border: 1px solid var(--border-strong);
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-sm);
-
-  background: var(--surface);
-  color: var(--text);
-
-  font: inherit;
-
-  transition:
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast),
-    background var(--transition-fast);
-}
-
-.settings-column input,
-.settings-column select {
-  min-height: 38px;
   padding: 8px 10px;
+  transition: border-color var(--duration-fast) var(--ease-standard),
+    box-shadow var(--duration-fast) var(--ease-standard);
 }
 
-.settings-column textarea {
-  padding: 10px;
-  resize: vertical;
+.settings-column select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23565b66' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  cursor: pointer;
 }
 
-.settings-column input:hover,
 .settings-column select:hover,
+.settings-column input[type="text"]:hover,
+.settings-column input[type="number"]:hover,
+.settings-column input[type="url"]:hover,
 .settings-column textarea:hover {
-  border-color: #c7ccd5;
+  border-color: var(--border-strong);
 }
 
-.settings-column input:focus,
 .settings-column select:focus,
+.settings-column input[type="text"]:focus,
+.settings-column input[type="number"]:focus,
+.settings-column input[type="url"]:focus,
 .settings-column textarea:focus {
-  outline: none;
-  border-color: var(--accent);
-
-  box-shadow:
-    0 0 0 3px var(--accent-soft);
+  border-color: var(--accent-400);
+  box-shadow: var(--shadow-focus);
 }
 
+.settings-column input[type="range"] {
+  width: 100%;
+  height: 4px;
+  accent-color: var(--accent-500);
+  cursor: pointer;
+}
 
-/* =========================================================
-   PREVIEW AREA
-   ========================================================= */
+.settings-column hr {
+  display: none;
+}
 
+/* Toggle field group - visually distinct block at the panel base */
+.field-group {
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Preview column */
 .preview-column {
   flex: 1 1 0;
   min-width: 0;
   width: 100%;
-
-  box-sizing: border-box;
 }
 
+.preview-panel h2 {
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin: 0 0 14px;
+}
 
-/*
-   The preview should feel like a canvas rather than
-   another white page.
-*/
+.preview-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.preview-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.preview-meta-item strong {
+  color: var(--text-primary);
+  font-weight: 650;
+}
+
+.preview-heading {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  font-weight: 650;
+  color: var(--text-primary);
+}
+
+.preview-description {
+  margin: 0 0 16px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.preview-surface {
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 20px;
+}
 
 .ghl-preview {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-
   box-sizing: border-box;
-
-  padding: 24px;
-
-  background: var(--surface);
-
-  border: 1px solid var(--border);
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-
   box-shadow: var(--shadow-sm);
+  padding: 4px;
 }
 
+.ghl-preview iframe {
+  border-radius: calc(var(--radius-lg) - 4px);
+  display: block;
+}
 
 /* =========================================================
-   WIDGET ROOT
+   Widget root (title/description + layout body)
    ========================================================= */
-
 .ghl-widget-root {
   display: flex;
   flex-direction: column;
-
-  gap: 16px;
-
+  gap: 14px;
   width: 100%;
   max-width: 100%;
   min-width: 0;
-
   box-sizing: border-box;
+  font-family: var(--font-sans);
+  color: var(--text-primary);
 }
-
-
-/* =========================================================
-   WIDGET HEADER
-   ========================================================= */
 
 .ghl-widget-header {
   width: 100%;
   max-width: 100%;
-
   box-sizing: border-box;
 }
 
 .ghl-widget-header h1 {
-  margin: 0 0 5px;
-
-  color: var(--text);
-
-  font-size: 1.25rem;
-  line-height: 1.4;
+  margin: 0 0 4px;
+  font-size: 1.15rem;
   font-weight: 650;
   letter-spacing: -0.01em;
+  color: var(--text-primary);
 }
 
 .ghl-widget-header p {
   margin: 0;
-
+  font-size: 0.9rem;
   color: var(--text-secondary);
-
-  font-size: 0.875rem;
-  line-height: 1.5;
 }
 
 .ghl-widget-status {
-  padding: 14px 16px;
-
-  color: var(--text-secondary);
-
-  background: var(--surface-subtle);
-
-  border: 1px solid var(--border);
+  padding: 16px;
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
+  background: var(--surface-sunken);
+  border: 1px dashed var(--border-default);
   border-radius: var(--radius-md);
-
-  font-size: 0.875rem;
+  text-align: center;
 }
 
-
-/* =========================================================
-   WIDGET
-   ========================================================= */
-
+/* Widget */
 .ghl-widget {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-
   box-sizing: border-box;
 }
 
-
-/* =========================================================
-   LIST
-   ========================================================= */
-
+/* List */
 .ghl-widget-list {
   display: flex;
   flex-direction: column;
-
-  gap: 12px;
-
+  gap: 10px;
   width: 100%;
   max-width: 100%;
-
   max-height: 420px;
-
   overflow-y: auto;
   overflow-x: hidden;
-
   min-width: 0;
   min-height: 0;
-
-  padding-right: 4px;
+  padding-right: 2px;
 }
 
 .ghl-widget-list .ghl-widget-item {
   width: 100%;
   max-width: 100%;
 
+  /* Important: don't let list items shrink */
   flex: 0 0 auto;
   flex-shrink: 0;
 }
 
-
-/* =========================================================
-   GRID
-   ========================================================= */
-
+/* Grid */
 .ghl-widget-grid {
   display: grid;
-
-  grid-template-columns:
-    repeat(auto-fit, minmax(min(200px, 100%), 1fr));
-
-  gap: 16px;
-
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: 14px;
   width: 100%;
   max-width: 100%;
-
   max-height: 420px;
-
   overflow-y: auto;
   overflow-x: hidden;
-
   min-width: 0;
+  padding-right: 2px;
 }
 
-
-/* =========================================================
-   WIDGET ITEMS
-   ========================================================= */
-
+/* Items */
 .ghl-widget-item {
   width: 100%;
   max-width: 100%;
   min-width: 0;
-
-  padding: 16px;
-
-  box-sizing: border-box;
-
-  border: 1px solid var(--border);
+  padding: 14px;
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-
-  background: var(--surface);
-
+  background: var(--surface-card);
+  box-shadow: var(--shadow-xs);
   overflow: hidden;
-
   word-break: break-word;
   overflow-wrap: anywhere;
 
   display: flex;
   flex-direction: column;
-
-  gap: 8px;
-
+  gap: 6px;
   flex-shrink: 1;
 
-  transition:
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast),
-    transform var(--transition-fast);
+  transition: border-color var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard),
+    transform var(--duration-base) var(--ease-standard);
 }
 
 .ghl-widget-item:hover {
   border-color: var(--border-strong);
-
   box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
 }
 
+.ghl-widget-item img {
+  border-radius: var(--radius-sm);
+}
 
-/* =========================================================
-   CAROUSELS
-   ========================================================= */
+.ghl-widget-item strong {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
 
+.ghl-widget-item div {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Custom scrollbars for widget containers */
+.ghl-widget-list,
+.ghl-widget-grid {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.ghl-widget-list::-webkit-scrollbar,
+.ghl-widget-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ghl-widget-list::-webkit-scrollbar-thumb,
+.ghl-widget-grid::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+}
+
+/* Carousels */
 .ghl-widget.layout-small-carousel,
 .ghl-widget.layout-carousel,
 .ghl-widget.layout-full-carousel {
   display: flex;
-
   width: 100%;
   max-width: 100%;
   min-width: 0;
 
-  gap: 16px;
+  gap: 14px;
   align-items: stretch;
 
   overflow-x: auto;
   overflow-y: hidden;
+  padding-bottom: 4px;
 
+  /* Prevent scrollbar from affecting layout */
   scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
 }
 
+.ghl-widget.layout-small-carousel::-webkit-scrollbar,
+.ghl-widget.layout-carousel::-webkit-scrollbar,
+.ghl-widget.layout-full-carousel::-webkit-scrollbar {
+  height: 6px;
+}
+
+.ghl-widget.layout-small-carousel::-webkit-scrollbar-thumb,
+.ghl-widget.layout-carousel::-webkit-scrollbar-thumb,
+.ghl-widget.layout-full-carousel::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+}
 
 /* Small carousel */
-
 .ghl-widget.layout-small-carousel .ghl-widget-item {
   flex: 0 0 clamp(150px, 25%, 180px);
-
   width: auto;
   max-width: 180px;
   max-height: 220px;
 }
 
-
 /* Normal carousel */
-
 .ghl-widget.layout-carousel .ghl-widget-item {
   flex: 0 0 clamp(220px, 40%, 280px);
-
   width: auto;
   max-width: 280px;
   max-height: 280px;
 }
 
-
 /* Full carousel */
-
 .ghl-widget.layout-full-carousel .ghl-widget-item {
   flex: 0 0 100%;
-
   width: 100%;
   max-width: 100%;
-
   max-height: 300px;
 }
 
-
 /* =========================================================
-   CAROUSEL ANIMATIONS
+   Carousel animations
    ========================================================= */
 
+/* Smooth loop: track scrolls continuously, items list is duplicated
+   once so it can wrap seamlessly at -50%. */
 .ghl-widget.carousel-anim-loop {
   overflow: hidden;
 }
 
 .carousel-loop-track {
   display: flex;
-
-  gap: 16px;
-
+  gap: 14px;
   width: max-content;
-
-  animation:
-    carousel-loop-scroll
-    var(--carousel-loop-duration, 20s)
-    linear infinite;
+  animation: carousel-loop-scroll var(--carousel-loop-duration, 20s) linear infinite;
 }
 
 .ghl-widget.carousel-anim-loop:hover .carousel-loop-track {
@@ -428,33 +527,29 @@
   from {
     transform: translateX(0);
   }
-
   to {
     transform: translateX(-50%);
   }
 }
 
-
-/* Batch animation */
-
+/* Batch slide: the whole visible batch slides out and the next
+   batch slides in "on a beat". */
 .ghl-widget.carousel-anim-batch {
   overflow: hidden;
 }
 
 .carousel-batch-track {
   display: flex;
-
-  gap: 16px;
-
+  gap: 14px;
   width: 100%;
 }
 
 .carousel-batch-track.is-entering {
-  animation: carousel-batch-enter 0.45s ease-out;
+  animation: carousel-batch-enter 0.45s var(--ease-standard);
 }
 
 .carousel-batch-track.is-leaving {
-  animation: carousel-batch-leave 0.45s ease-in forwards;
+  animation: carousel-batch-leave 0.45s var(--ease-standard) forwards;
 }
 
 @keyframes carousel-batch-enter {
@@ -462,7 +557,6 @@
     transform: translateX(40px);
     opacity: 0;
   }
-
   to {
     transform: translateX(0);
     opacity: 1;
@@ -474,216 +568,30 @@
     transform: translateX(0);
     opacity: 1;
   }
-
   to {
     transform: translateX(-40px);
     opacity: 0;
   }
 }
 
-
-/* =========================================================
-   SCROLLBARS
-   ========================================================= */
-
-.ghl-widget-list,
-.ghl-widget-grid,
-.ghl-widget.layout-small-carousel,
-.ghl-widget.layout-carousel,
-.ghl-widget.layout-full-carousel {
-  scrollbar-width: thin;
-  scrollbar-color: #cbd0d8 transparent;
-}
-
-.ghl-widget-list::-webkit-scrollbar,
-.ghl-widget-grid::-webkit-scrollbar,
-.ghl-widget.layout-small-carousel::-webkit-scrollbar,
-.ghl-widget.layout-carousel::-webkit-scrollbar,
-.ghl-widget.layout-full-carousel::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.ghl-widget-list::-webkit-scrollbar-track,
-.ghl-widget-grid::-webkit-scrollbar-track,
-.ghl-widget.layout-small-carousel::-webkit-scrollbar-track,
-.ghl-widget.layout-carousel::-webkit-scrollbar-track,
-.ghl-widget.layout-full-carousel::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.ghl-widget-list::-webkit-scrollbar-thumb,
-.ghl-widget-grid::-webkit-scrollbar-thumb,
-.ghl-widget.layout-small-carousel::-webkit-scrollbar-thumb,
-.ghl-widget.layout-carousel::-webkit-scrollbar-thumb,
-.ghl-widget.layout-full-carousel::-webkit-scrollbar-thumb {
-  background: #cbd0d8;
-  border-radius: 999px;
-}
-
-
-/* =========================================================
-   TOGGLE
-   ========================================================= */
-
-.toggle {
-  display: flex;
-  align-items: center;
-
-  gap: 10px;
-
-  cursor: pointer;
-
-  color: var(--text);
-
-  font-size: 0.875rem;
-  line-height: 1.4;
-}
-
-.toggle input {
-  position: absolute;
-
-  width: 1px;
-  height: 1px;
-
-  opacity: 0;
-  pointer-events: none;
-}
-
-.slider {
-  position: relative;
-
-  width: 40px;
-  height: 22px;
-
-  flex: 0 0 40px;
-
-  background: #d0d5dd;
-
-  border-radius: 999px;
-
-  transition:
-    background var(--transition-fast),
-    box-shadow var(--transition-fast);
-}
-
-.slider::before {
-  content: "";
-
-  position: absolute;
-
-  width: 18px;
-  height: 18px;
-
-  left: 2px;
-  top: 2px;
-
-  background: #ffffff;
-
-  border-radius: 50%;
-
-  box-shadow:
-    0 1px 2px rgba(16, 24, 40, 0.18);
-
-  transition:
-    transform var(--transition-fast),
-    box-shadow var(--transition-fast);
-}
-
-.toggle:hover .slider {
-  background: #b9c0ca;
-}
-
-.toggle input:focus-visible + .slider {
-  box-shadow:
-    0 0 0 3px var(--accent-soft);
-}
-
-.toggle input:checked + .slider {
-  background: var(--accent);
-}
-
-.toggle input:checked + .slider::before {
-  transform: translateX(18px);
-}
-
-
-/* =========================================================
-   BUTTONS
-   ========================================================= */
-
-button {
-  font: inherit;
-}
-
-.settings-column button {
-  border: 1px solid transparent;
-
-  border-radius: var(--radius-sm);
-
-  padding: 8px 14px;
-
-  background: var(--accent);
-  color: #ffffff;
-
-  font-size: 0.875rem;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  transition:
-    background var(--transition-fast),
-    box-shadow var(--transition-fast),
-    transform var(--transition-fast);
-}
-
-.settings-column button:hover {
-  background: var(--accent-hover);
-}
-
-.settings-column button:active {
-  transform: translateY(1px);
-}
-
-.settings-column button:focus-visible {
-  outline: none;
-
-  box-shadow:
-    0 0 0 3px var(--accent-soft);
-}
-
-
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
+/* Note: full-carousel items use a % flex-basis normally, which can't
+   resolve correctly inside the loop track (width: max-content). For
+   that combination, BaseCarousel measures the container in JS and
+   applies an inline pixel width instead of relying on CSS alone.
+   The batch track stays width:100%, so % basis works fine there. */
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-  }
-
   .carousel-loop-track,
   .carousel-batch-track.is-entering,
-  .carousel-batch-track.is-leaving {
+  .carousel-batch-track.is-leaving,
+  .ghl-widget-item {
     animation: none !important;
-  }
-
-  .ghl-widget-item,
-  .slider,
-  .slider::before,
-  .settings-column input,
-  .settings-column select,
-  .settings-column textarea,
-  .settings-column button {
     transition: none !important;
   }
 }
 
-
 /* =========================================================
-   TABLET
+   Tablet
    ========================================================= */
 
 @media (max-width: 900px) {
@@ -698,23 +606,19 @@ button {
   }
 
   .ghl-widget-grid {
-    grid-template-columns:
-      repeat(auto-fit, minmax(min(160px, 100%), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
   }
 }
 
-
 /* =========================================================
-   MOBILE
+   Mobile
    ========================================================= */
 
 @media (max-width: 768px) {
   .app-layout {
     flex-direction: column;
-
     gap: 20px;
-    padding: 20px;
-
+    padding: 16px;
     overflow: visible;
   }
 
@@ -722,29 +626,22 @@ button {
   .preview-column {
     width: 100%;
     max-width: 100%;
-
     flex: none;
-  }
-
-  .ghl-preview {
-    padding: 18px;
+    position: static;
   }
 
   .ghl-widget-grid {
-    grid-template-columns:
-      repeat(auto-fit, minmax(min(150px, 100%), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr));
   }
 
   .ghl-widget.layout-small-carousel .ghl-widget-item {
     flex-basis: 150px;
-
     max-width: 150px;
     max-height: 180px;
   }
 
   .ghl-widget.layout-carousel .ghl-widget-item {
     flex-basis: 220px;
-
     max-width: 220px;
     max-height: 220px;
   }
@@ -754,18 +651,13 @@ button {
   }
 }
 
-
 /* =========================================================
-   SMALL MOBILE
+   Small mobile
    ========================================================= */
 
 @media (max-width: 480px) {
   .app-layout {
-    padding: 16px;
-  }
-
-  .ghl-preview {
-    padding: 14px;
+    padding: 12px;
   }
 
   .ghl-widget-grid {
@@ -774,14 +666,12 @@ button {
 
   .ghl-widget.layout-small-carousel .ghl-widget-item {
     flex-basis: 120px;
-
     max-width: 120px;
     max-height: 150px;
   }
 
   .ghl-widget.layout-carousel .ghl-widget-item {
     flex-basis: min(180px, 80%);
-
     max-width: min(180px, 80%);
     max-height: 180px;
   }
@@ -790,4 +680,54 @@ button {
     padding: 10px;
     gap: 4px;
   }
+}
+
+/* =========================================================
+   Toggle
+   ========================================================= */
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle input {
+  display: none;
+}
+
+.slider {
+  width: 38px;
+  height: 21px;
+  flex: 0 0 38px;
+  background: var(--border-strong);
+  border-radius: 999px;
+  position: relative;
+  transition: background var(--duration-base) var(--ease-standard);
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  left: 2px;
+  top: 2px;
+  background: var(--surface-card);
+  border-radius: 50%;
+  box-shadow: var(--shadow-xs);
+  transition: transform var(--duration-base) var(--ease-standard);
+}
+
+.toggle input:checked + .slider {
+  background: var(--accent-500);
+}
+
+.toggle input:checked + .slider::before {
+  transform: translateX(17px);
+}
+
+.toggle:has(input:focus-visible) .slider {
+  box-shadow: var(--shadow-focus);
 }
