@@ -1,28 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import WidgetItemCard from "./WidgetItemCard";
 
-// Maps the 1-10 speed setting to real durations.
-// Higher speed = shorter duration = faster motion.
 function speedToLoopDuration(speed) {
-  // 1 -> 40s (slow), 10 -> 6s (fast)
   const clamped = Math.min(10, Math.max(1, Number(speed) || 5));
   return 40 - (clamped - 1) * ((40 - 6) / 9);
 }
 
 function speedToBatchInterval(speed) {
-  // 1 -> 5000ms (slow), 10 -> 900ms (fast)
   const clamped = Math.min(10, Math.max(1, Number(speed) || 5));
   return 5000 - (clamped - 1) * ((5000 - 900) / 9);
 }
 
-/**
- * Shared carousel renderer for small/normal/full carousel layouts.
- *
- * animation: "none" | "loop" | "batch"
- * - none: static row, horizontally scrollable (existing behavior)
- * - loop: continuous marquee-style scroll, seamless loop via duplicated items
- * - batch: groups of `batchSize` items slide in/out on an interval
- */
 function BaseCarousel({ items, layoutClassName, animation = "none", speed = 5, batchSize }) {
   const [batchIndex, setBatchIndex] = useState(0);
   const [animating, setAnimating] = useState(false);
@@ -66,7 +54,6 @@ function BaseCarousel({ items, layoutClassName, animation = "none", speed = 5, b
 
     intervalRef.current = setInterval(() => {
       setAnimating(true);
-      // let the "leaving" animation play, then swap batch and reset
       setTimeout(() => {
         setBatchIndex((prev) => (prev + 1) % batches.length);
         setAnimating(false);
@@ -78,12 +65,8 @@ function BaseCarousel({ items, layoutClassName, animation = "none", speed = 5, b
 
   if (animation === "loop") {
     const duration = speedToLoopDuration(speed);
-    // Duplicate items once so the track can scroll -50% and loop seamlessly.
     const loopItems = [...items, ...items];
 
-    // full-carousel items are normally sized with a % flex-basis, which
-    // can't resolve correctly inside a width:max-content track - so we
-    // measure the container in pixels instead for that layout only.
     const itemStyle =
       isFullWidthItems && containerWidth
         ? { flex: `0 0 ${containerWidth}px`, width: containerWidth, maxWidth: containerWidth }

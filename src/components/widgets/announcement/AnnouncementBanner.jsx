@@ -1,6 +1,5 @@
 import { useWidgetData } from "../../../hooks/useWidgetData";
 import { widgetRegistry } from "../registry";
-import { useWidgetStore } from "../../../store/widgetStore";
 
 function AnnouncementBanner({ settings }) {
   const { items, loading, error } = useWidgetData(settings.api?.url);
