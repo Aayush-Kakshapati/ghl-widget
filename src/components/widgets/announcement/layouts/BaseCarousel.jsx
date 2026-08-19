@@ -11,27 +11,32 @@ function speedToBatchInterval(speed) {
   return 5000 - (clamped - 1) * ((5000 - 900) / 9);
 }
 
-function BaseCarousel({ items, layoutClassName, animation = "none", speed = 5, batchSize }) {
+// Single carousel used for all densities; item box size comes from
+// itemsPerView (content-width based) plus optional width/height caps.
+function BaseCarousel({
+  items,
+  layoutClassName,
+  animation = "none",
+  speed = 5,
+  itemsPerView = 3,
+  itemWidth,
+  itemHeight,
+}) {
   const [batchIndex, setBatchIndex] = useState(0);
   const [animating, setAnimating] = useState(false);
-  const [containerWidth, setContainerWidth] = useState(null);
   const containerRef = useRef(null);
 
-  const isFullWidthItems = layoutClassName.includes("layout-full-carousel");
+  const perView = Math.max(1, Number(itemsPerView) || 1);
 
-  useEffect(() => {
-    if (!isFullWidthItems || animation !== "loop" || !containerRef.current) return;
+  // Item flex-basis is a share of content width (via CSS var), capped by
+  // an explicit pixel width if the user set one.
+  const carouselVars = {
+    "--carousel-items-per-view": perView,
+    "--carousel-item-width": itemWidth ? `${itemWidth}px` : undefined,
+    "--carousel-item-height": itemHeight ? `${itemHeight}px` : "auto",
+  };
 
-    const el = containerRef.current;
-    const observer = new ResizeObserver((entries) => {
-      const width = entries[0]?.contentRect?.width;
-      if (width) setContainerWidth(width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [isFullWidthItems, animation]);
-
-  const effectiveBatchSize = batchSize || items.length || 1;
+  const effectiveBatchSize = perView;
 
   const batches = useMemo(() => {
     if (!items.length) return [];
@@ -67,19 +72,18 @@ function BaseCarousel({ items, layoutClassName, animation = "none", speed = 5, b
     const duration = speedToLoopDuration(speed);
     const loopItems = [...items, ...items];
 
-    const itemStyle =
-      isFullWidthItems && containerWidth
-        ? { flex: `0 0 ${containerWidth}px`, width: containerWidth, maxWidth: containerWidth }
-        : undefined;
-
     return (
-      <div className={`${layoutClassName} carousel-anim-loop`} ref={containerRef}>
+      <div
+        className={`${layoutClassName} carousel-anim-loop`}
+        style={carouselVars}
+        ref={containerRef}
+      >
         <div
           className="carousel-loop-track"
           style={{ "--carousel-loop-duration": `${duration}s` }}
         >
           {loopItems.map((item, i) => (
-            <WidgetItemCard key={`${item.id}-${i}`} item={item} style={itemStyle} />
+            <WidgetItemCard key={`${item.id}-${i}`} item={item} />
           ))}
         </div>
       </div>
@@ -90,7 +94,7 @@ function BaseCarousel({ items, layoutClassName, animation = "none", speed = 5, b
     const currentBatch = batches[batchIndex] || [];
 
     return (
-      <div className={`${layoutClassName} carousel-anim-batch`}>
+      <div className={`${layoutClassName} carousel-anim-batch`} style={carouselVars}>
         <div
           className={`carousel-batch-track ${animating ? "is-leaving" : "is-entering"}`}
         >
@@ -103,7 +107,7 @@ function BaseCarousel({ items, layoutClassName, animation = "none", speed = 5, b
   }
 
   return (
-    <div className={layoutClassName}>
+    <div className={layoutClassName} style={carouselVars}>
       {items.map((item) => (
         <WidgetItemCard key={item.id} item={item} />
       ))}

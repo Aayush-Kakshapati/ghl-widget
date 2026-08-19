@@ -41,6 +41,7 @@ export function createJs(settings) {
   }
 
 function renderItem(item) {
+    // item box element; size comes from CSS vars set on its parent container
     var card = document.createElement("div");
     card.className = "ghl-widget-item";
 
@@ -110,18 +111,43 @@ function renderItem(item) {
     return body;
   }
 
-  var CAROUSEL_LAYOUTS = ["small-carousel", "carousel", "full-carousel"];
-  var BATCH_SIZES = { "small-carousel": 4, carousel: 3, "full-carousel": 1 };
+  var CAROUSEL_LAYOUTS = ["carousel"];
 
   function baseLayoutClassName(layout) {
     switch (layout) {
       case "list": return "ghl-widget-body ghl-widget ghl-widget-list layout-list";
-      case "grid": return "ghl-widget-body ghl-widget ghl-widget-grid layout-grid";
-      case "small-carousel": return "ghl-widget-body ghl-widget layout-small-carousel";
+      case "grid":
+        var gridMode = settings.grid_columns && Number(settings.grid_columns) > 0
+          ? "grid-fixed-columns"
+          : "grid-auto-columns";
+        return "ghl-widget-body ghl-widget ghl-widget-grid layout-grid " + gridMode;
       case "carousel": return "ghl-widget-body ghl-widget layout-carousel";
-      case "full-carousel": return "ghl-widget-body ghl-widget layout-full-carousel";
       default: return "ghl-widget-body ghl-widget layout-list";
     }
+  }
+
+  // Applies item width/height/columns/items-per-view as CSS custom
+  // properties on the widget body, same vars the React preview uses.
+  function applySizeVars(body) {
+    if (settings.item_width) {
+      body.style.setProperty("--grid-item-width", settings.item_width + "px");
+      body.style.setProperty("--carousel-item-width", settings.item_width + "px");
+    }
+    body.style.setProperty(
+      "--grid-item-height",
+      settings.item_height ? settings.item_height + "px" : "auto"
+    );
+    body.style.setProperty(
+      "--carousel-item-height",
+      settings.item_height ? settings.item_height + "px" : "auto"
+    );
+    if (settings.grid_columns) {
+      body.style.setProperty("--grid-columns", settings.grid_columns);
+    }
+    body.style.setProperty(
+      "--carousel-items-per-view",
+      settings.carousel_items_per_view || 3
+    );
   }
 
   function speedToLoopDuration(speed) {
@@ -147,6 +173,7 @@ function renderItem(item) {
     var isCarousel = CAROUSEL_LAYOUTS.indexOf(settings.layout) !== -1;
     var className = baseLayoutClassName(settings.layout);
     var body = getBodyEl();
+    applySizeVars(body);
 
     if (isCarousel && animation === "loop") {
       className += " carousel-anim-loop";
@@ -162,16 +189,7 @@ function renderItem(item) {
 
       var loopItems = items.concat(items);
       loopItems.forEach(function (item) {
-        var card = renderItem(item);
-        if (settings.layout === "full-carousel") {
-            var width = body.clientWidth || body.getBoundingClientRect().width;
-          if (width) {
-            card.style.flex = "0 0 " + width + "px";
-            card.style.width = width + "px";
-            card.style.maxWidth = width + "px";
-          }
-        }
-        track.appendChild(card);
+        track.appendChild(renderItem(item));
       });
 
       body.appendChild(track);
@@ -189,8 +207,9 @@ function renderItem(item) {
     var className = baseLayoutClassName(settings.layout) + " carousel-anim-batch";
     var body = getBodyEl();
     body.className = className;
+    applySizeVars(body);
 
-    var batchSize = BATCH_SIZES[settings.layout] || items.length || 1;
+    var batchSize = settings.carousel_items_per_view || items.length || 1;
     var batches = [];
     for (var i = 0; i < items.length; i += batchSize) {
       batches.push(items.slice(i, i + batchSize));

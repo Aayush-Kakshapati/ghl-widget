@@ -8,9 +8,8 @@ function SettingsPanel() {
 
   const layouts = widgetRegistry.announcement.layouts;
 
-  const isCarouselLayout = ["small-carousel", "carousel", "full-carousel"].includes(
-    settings.layout
-  );
+  const isCarouselLayout = settings.layout === "carousel";
+  const isGridLayout = settings.layout === "grid";
 
   return (
     <div>
@@ -47,6 +46,59 @@ function SettingsPanel() {
           ))}
         </select>
       </div>
+
+      {/* Item box size, applies to grid and carousel */}
+      {(isGridLayout || isCarouselLayout) && (
+        <div className="field-row">
+          <div className="field">
+            <label className="field-label">Item Width (px)</label>
+            <input
+              type="number"
+              min="40"
+              value={settings.item_width}
+              onChange={(e) => updateSetting("item_width", Number(e.target.value))}
+            />
+          </div>
+          <div className="field">
+            <label className="field-label">Item Height (px)</label>
+            <input
+              type="number"
+              min="40"
+              value={settings.item_height}
+              onChange={(e) => updateSetting("item_height", Number(e.target.value))}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Grid: number of columns */}
+      {isGridLayout && (
+        <div className="field">
+          <label className="field-label">Grid Columns</label>
+          <input
+            type="number"
+            min="0"
+            value={settings.grid_columns}
+            onChange={(e) => updateSetting("grid_columns", Number(e.target.value))}
+          />
+          <div className="field-hint">0 = auto-fit based on item width</div>
+        </div>
+      )}
+
+      {/* Carousel: how many items fit across the content width */}
+      {isCarouselLayout && (
+        <div className="field">
+          <label className="field-label">Items Per View</label>
+          <input
+            type="number"
+            min="1"
+            value={settings.carousel_items_per_view}
+            onChange={(e) =>
+              updateSetting("carousel_items_per_view", Number(e.target.value))
+            }
+          />
+        </div>
+      )}
 
       {isCarouselLayout && (
         <>

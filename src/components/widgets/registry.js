@@ -1,8 +1,6 @@
 import ListLayout from "./announcement/layouts/ListLayout";
 import GridLayout from "./announcement/layouts/GridLayout";
-import SmallCarouselLayout from "./announcement/layouts/SmallCarouselLayout";
 import CarouselLayout from "./announcement/layouts/CarouselLayout";
-import FullCarouselLayout from "./announcement/layouts/FullCarouselLayout";
 
 export const widgetRegistry = {
   announcement: {
@@ -19,19 +17,9 @@ export const widgetRegistry = {
         component: GridLayout,
       },
 
-      "small-carousel": {
-        name: "Small Carousel",
-        component: SmallCarouselLayout,
-      },
-
       carousel: {
-        name: "Normal Carousel",
+        name: "Carousel",
         component: CarouselLayout,
-      },
-
-      "full-carousel": {
-        name: "Full Carousel",
-        component: FullCarouselLayout,
       },
     },
   },

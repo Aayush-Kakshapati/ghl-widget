@@ -9,8 +9,17 @@ const defaultSettings = {
   set_ghlpreview_visible: false,
   set_preview_visible: false,
 
+  // Item box size, used by grid and carousel layouts
+  item_width: 220, // px
+  item_height: 220, // px, "auto" also allowed
+
+  // Carousel: how many item boxes fit across the content width at once
+  carousel_items_per_view: 3,
   carousel_animation: "none", // "none" | "loop" | "batch"
   carousel_speed: 5, // 1 (slow) - 10 (fast)
+
+  // Grid: number of columns (0/"" = auto-fit based on item_width)
+  grid_columns: 3,
 
   api: {
     url: "https://dummyjson.com/users",
