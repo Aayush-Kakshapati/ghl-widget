@@ -1,46 +1,44 @@
-/* =========================================================
-   Design tokens
-   ========================================================= */
+
 :root {
-  /* Surfaces */
+  
   --surface-canvas: #f6f7f9;
   --surface-card: #ffffff;
   --surface-sunken: #f1f2f5;
 
-  /* Borders */
+  
   --border-subtle: #e4e6eb;
   --border-default: #dcdfe5;
   --border-strong: #c7cbd4;
 
-  /* Text */
+  
   --text-primary: #16181d;
   --text-secondary: #565b66;
   --text-tertiary: #8a8f9b;
 
-  /* Accent - indigo, used sparingly for interactive/active states */
+  
   --accent-50: #eef0fe;
   --accent-100: #dfe3fd;
   --accent-400: #6366f1;
   --accent-500: #4f46e5;
   --accent-600: #4338ca;
 
-  /* Elevation */
+  
   --shadow-xs: 0 1px 2px rgba(16, 18, 26, 0.04);
   --shadow-sm: 0 1px 3px rgba(16, 18, 26, 0.06), 0 1px 2px rgba(16, 18, 26, 0.04);
   --shadow-md: 0 4px 12px rgba(16, 18, 26, 0.08), 0 1px 2px rgba(16, 18, 26, 0.04);
   --shadow-focus: 0 0 0 3px var(--accent-100);
 
-  /* Radius */
+  
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
 
-  /* Motion */
+  
   --ease-standard: cubic-bezier(0.2, 0.6, 0.2, 1);
   --duration-fast: 120ms;
   --duration-base: 200ms;
 
-  /* Type */
+  
   --font-sans:
     "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
 }
@@ -57,16 +55,14 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Focus ring - consistent, visible, keyboard-first */
+
 :focus-visible {
   outline: none;
   box-shadow: var(--shadow-focus);
   border-radius: var(--radius-sm);
 }
 
-/* =========================================================
-   App shell
-   ========================================================= */
+
 .app-layout {
   width: 100%;
   max-width: 100%;
@@ -77,7 +73,7 @@ body {
   align-items: flex-start;
 }
 
-/* Settings column */
+
 .settings-column {
   flex: 0 1 320px;
   width: 320px;
@@ -102,7 +98,7 @@ body {
   border-bottom: 1px solid var(--border-subtle);
 }
 
-/* Field groups - replaces stray <hr> spacers with real rhythm */
+
 .field {
   margin-bottom: 18px;
 }
@@ -200,7 +196,7 @@ body {
   display: none;
 }
 
-/* Toggle field group - visually distinct block at the panel base */
+
 .field-group {
   padding-top: 14px;
   border-top: 1px solid var(--border-subtle);
@@ -209,7 +205,7 @@ body {
   gap: 12px;
 }
 
-/* Preview column */
+
 .preview-column {
   flex: 1 1 0;
   min-width: 0;
@@ -288,9 +284,7 @@ body {
   display: block;
 }
 
-/* =========================================================
-   Widget root (title/description + layout body)
-   ========================================================= */
+
 .ghl-widget-root {
   display: flex;
   flex-direction: column;
@@ -333,7 +327,7 @@ body {
   text-align: center;
 }
 
-/* Widget */
+
 .ghl-widget {
   width: 100%;
   max-width: 100%;
@@ -341,7 +335,7 @@ body {
   box-sizing: border-box;
 }
 
-/* List */
+
 .ghl-widget-list {
   display: flex;
   flex-direction: column;
@@ -360,12 +354,12 @@ body {
   width: 100%;
   max-width: 100%;
 
-  /* Important: don't let list items shrink */
+  
   flex: 0 0 auto;
   flex-shrink: 0;
 }
 
-/* Grid */
+
 .ghl-widget-grid {
   display: grid;
   gap: 14px;
@@ -378,7 +372,7 @@ body {
   padding-right: 2px;
 }
 
-/* Auto columns: fit as many items as possible at the configured item width */
+
 .ghl-widget-grid.grid-auto-columns {
   grid-template-columns: repeat(
     auto-fit,
@@ -386,7 +380,7 @@ body {
   );
 }
 
-/* Fixed columns: exact column count set in settings */
+
 .ghl-widget-grid.grid-fixed-columns {
   grid-template-columns: repeat(var(--grid-columns, 3), minmax(0, 1fr));
 }
@@ -395,7 +389,7 @@ body {
   height: var(--grid-item-height, auto);
 }
 
-/* Items */
+
 .ghl-widget-item {
   width: 100%;
   max-width: 100%;
@@ -442,7 +436,7 @@ body {
   line-height: 1.4;
 }
 
-/* Custom scrollbars for widget containers */
+
 .ghl-widget-list,
 .ghl-widget-grid {
   scrollbar-width: thin;
@@ -460,7 +454,7 @@ body {
   border-radius: 999px;
 }
 
-/* Carousel */
+
 .ghl-widget.layout-carousel {
   display: flex;
   width: 100%;
@@ -474,7 +468,7 @@ body {
   overflow-y: hidden;
   padding-bottom: 4px;
 
-  /* Prevent scrollbar from affecting layout */
+  
   scrollbar-width: thin;
   scrollbar-color: var(--border-strong) transparent;
 }
@@ -488,8 +482,7 @@ body {
   border-radius: 999px;
 }
 
-/* Item box width = share of content width based on items-per-view,
-   capped by an explicit pixel width when the user sets one. */
+
 .ghl-widget.layout-carousel .ghl-widget-item {
   flex: 0 0 calc((100% - (var(--carousel-items-per-view, 3) - 1) * 14px) / var(--carousel-items-per-view, 3));
   width: auto;
@@ -498,12 +491,9 @@ body {
   max-height: var(--carousel-item-height, 300px);
 }
 
-/* =========================================================
-   Carousel animations
-   ========================================================= */
 
-/* Smooth loop: track scrolls continuously, items list is duplicated
-   once so it can wrap seamlessly at -50%. */
+
+
 .ghl-widget.carousel-anim-loop {
   overflow: hidden;
 }
@@ -528,8 +518,7 @@ body {
   }
 }
 
-/* Batch slide: the whole visible batch slides out and the next
-   batch slides in "on a beat". */
+
 .ghl-widget.carousel-anim-batch {
   overflow: hidden;
 }
@@ -570,11 +559,7 @@ body {
   }
 }
 
-/* Note: item flex-basis is normally a % of container width, which
-   can't resolve inside the loop track (width: max-content). The loop
-   track below gives items a fixed pixel width instead so the smooth
-   scroll animation has something concrete to work with. The batch
-   track stays width:100%, so % basis works fine there. */
+
 .ghl-widget.carousel-anim-loop .ghl-widget-item {
   flex: 0 0 var(--carousel-item-width, 220px);
   width: var(--carousel-item-width, 220px);
@@ -591,9 +576,7 @@ body {
   }
 }
 
-/* =========================================================
-   Tablet
-   ========================================================= */
+
 
 @media (max-width: 900px) {
   .app-layout {
@@ -611,13 +594,11 @@ body {
   }
 
   .ghl-widget-grid.grid-fixed-columns {
-    grid-template-columns: repeat(min(var(--grid-columns, 3), 3), minmax(0, 1fr));
+    grid-template-columns: repeat(var(--grid-columns, 3), minmax(0, 1fr));
   }
 }
 
-/* =========================================================
-   Mobile
-   ========================================================= */
+
 
 @media (max-width: 768px) {
   .app-layout {
@@ -640,10 +621,10 @@ body {
   }
 
   .ghl-widget-grid.grid-fixed-columns {
-    grid-template-columns: repeat(min(var(--grid-columns, 3), 2), minmax(0, 1fr));
+    grid-template-columns: repeat(var(--grid-columns, 3), minmax(0, 1fr));
   }
 
-  /* cap visible carousel density on tablet/mobile regardless of setting */
+  
   .ghl-widget.layout-carousel .ghl-widget-item {
     flex-basis: calc((100% - (min(var(--carousel-items-per-view, 3), 3) - 1) * 14px) / min(var(--carousel-items-per-view, 3), 3));
   }
@@ -653,17 +634,14 @@ body {
   }
 }
 
-/* =========================================================
-   Small mobile
-   ========================================================= */
+
 
 @media (max-width: 480px) {
   .app-layout {
     padding: 12px;
   }
 
-  .ghl-widget-grid.grid-auto-columns,
-  .ghl-widget-grid.grid-fixed-columns {
+  .ghl-widget-grid.grid-auto-columns {
     grid-template-columns: 1fr;
   }
 
@@ -677,9 +655,7 @@ body {
   }
 }
 
-/* =========================================================
-   Toggle
-   ========================================================= */
+
 .toggle {
   display: flex;
   align-items: center;
@@ -725,4 +701,188 @@ body {
 
 .toggle:has(input:focus-visible) .slider {
   box-shadow: var(--shadow-focus);
+}
+
+
+.preview-surface {
+  position: relative;
+  overflow: hidden;
+}
+
+.ghl-floating-widget {
+  position: fixed;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  pointer-events: none;
+}
+
+.ghl-floating-widget.floating-position-bottom-right {
+  right: 20px;
+  bottom: 20px;
+}
+
+.ghl-floating-widget.floating-position-bottom-left {
+  left: 20px;
+  bottom: 20px;
+}
+
+.ghl-floating-widget.floating-position-top-right {
+  right: 20px;
+  top: 20px;
+}
+
+.ghl-floating-widget.floating-position-top-left {
+  left: 20px;
+  top: 20px;
+}
+
+.ghl-floating-trigger {
+  pointer-events: auto;
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
+  background: var(--surface-card);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-md);
+  padding: 10px 15px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: transform var(--duration-base) var(--ease-standard),
+    box-shadow var(--duration-base) var(--ease-standard);
+}
+
+.ghl-floating-trigger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(16, 18, 26, 0.12);
+}
+
+.ghl-floating-panel {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: min(360px, 90vw);
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 12px 36px rgba(16, 18, 26, 0.16);
+  display: flex;
+  flex-direction: column;
+  z-index: 10001;
+  transition: transform 260ms var(--ease-standard);
+  pointer-events: auto;
+}
+
+.ghl-floating-panel-right {
+  right: 0;
+  transform: translateX(100%);
+}
+
+.ghl-floating-panel-left {
+  left: 0;
+  transform: translateX(-100%);
+}
+
+.ghl-floating-widget.is-open .ghl-floating-panel-right,
+.ghl-floating-widget.is-open .ghl-floating-panel-left {
+  transform: translateX(0);
+}
+
+.ghl-floating-panel-header {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ghl-floating-panel-header strong {
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--text-primary);
+}
+
+.ghl-floating-close {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ghl-floating-close:hover {
+  background: var(--surface-sunken);
+  color: var(--text-primary);
+}
+
+.ghl-floating-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.ghl-floating-list-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.ghl-floating-list-item strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ghl-floating-list-item span {
+  font-size: 12px;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.ghl-floating-state {
+  padding: 16px 10px;
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+.field-error {
+  margin-top: -4px;
+  color: #b42318;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.floating-settings {
+  margin-top: 18px;
+}
+
+@media (max-width: 480px) {
+  .ghl-floating-widget.floating-position-bottom-right,
+  .ghl-floating-widget.floating-position-top-right {
+    right: 12px;
+  }
+
+  .ghl-floating-widget.floating-position-bottom-left,
+  .ghl-floating-widget.floating-position-top-left {
+    left: 12px;
+  }
+
+  .ghl-floating-widget.floating-position-bottom-right,
+  .ghl-floating-widget.floating-position-bottom-left {
+    bottom: 12px;
+  }
+
+  .ghl-floating-widget.floating-position-top-right,
+  .ghl-floating-widget.floating-position-top-left {
+    top: 12px;
+  }
 }

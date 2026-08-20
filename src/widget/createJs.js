@@ -3,6 +3,7 @@ export function createJs(settings) {
 
   return `
 (function () {
+  // Render the announcement data and optional floating user-data panel from the saved widget settings.
   var settings = ${settingsJson};
   var root = document.getElementById("ghl-widget");
   if (!root) return;
@@ -15,9 +16,9 @@ export function createJs(settings) {
           id: user.id,
           title: user.firstName + " " + user.lastName,
           subtitle: user.email || "",
-          image: user.image || null,
+          image: user.image || null
         };
-      }),
+      })
     };
   }
 
@@ -29,9 +30,9 @@ export function createJs(settings) {
           id: entry.id != null ? entry.id : index,
           title: entry.title || entry.name || "Untitled",
           subtitle: entry.subtitle || entry.description || "",
-          image: entry.image || entry.thumbnail || null,
+          image: entry.image || entry.thumbnail || null
         };
-      }),
+      })
     };
   }
 
@@ -40,8 +41,7 @@ export function createJs(settings) {
     return normalizeGeneric;
   }
 
-function renderItem(item) {
-    // item box element; size comes from CSS vars set on its parent container
+  function renderItem(item) {
     var card = document.createElement("div");
     card.className = "ghl-widget-item";
 
@@ -51,13 +51,10 @@ function renderItem(item) {
       img.alt = item.title;
       img.width = 50;
       img.height = 50;
-      img.style.borderRadius = "6px";
-      img.style.objectFit = "cover";
       card.appendChild(img);
     }
 
     var textWrap = document.createElement("div");
-
     var title = document.createElement("strong");
     title.textContent = item.title;
     textWrap.appendChild(title);
@@ -67,11 +64,12 @@ function renderItem(item) {
       subtitle.textContent = item.subtitle;
       textWrap.appendChild(subtitle);
     }
+
     card.appendChild(textWrap);
     return card;
   }
 
-  function renderTitleDesc(){
+  function renderTitleDesc() {
     var titleDesc = document.createElement("div");
     titleDesc.className = "ghl-widget-header";
 
@@ -93,6 +91,7 @@ function renderItem(item) {
   function getBodyEl() {
     root.className = "ghl-widget-root";
     var body = root.querySelector(".ghl-widget-body");
+
     if (!body) {
       root.innerHTML = "";
       root.appendChild(renderTitleDesc());
@@ -102,52 +101,31 @@ function renderItem(item) {
     } else {
       var header = root.querySelector(".ghl-widget-header");
       var freshHeader = renderTitleDesc();
-      if (header) {
-        root.replaceChild(freshHeader, header);
-      } else {
-        root.insertBefore(freshHeader, body);
-      }
+
+      if (header) root.replaceChild(freshHeader, header);
+      else root.insertBefore(freshHeader, body);
     }
+
     return body;
   }
 
-  var CAROUSEL_LAYOUTS = ["carousel"];
-
   function baseLayoutClassName(layout) {
-    switch (layout) {
-      case "list": return "ghl-widget-body ghl-widget ghl-widget-list layout-list";
-      case "grid":
-        var gridMode = settings.grid_columns && Number(settings.grid_columns) > 0
-          ? "grid-fixed-columns"
-          : "grid-auto-columns";
-        return "ghl-widget-body ghl-widget ghl-widget-grid layout-grid " + gridMode;
-      case "carousel": return "ghl-widget-body ghl-widget layout-carousel";
-      default: return "ghl-widget-body ghl-widget layout-list";
-    }
+    if (layout === "list") return "ghl-widget-body ghl-widget ghl-widget-list layout-list";
+    if (layout === "grid") return "ghl-widget-body ghl-widget ghl-widget-grid layout-grid grid-fixed-columns";
+    if (layout === "carousel") return "ghl-widget-body ghl-widget layout-carousel";
+    return "ghl-widget-body ghl-widget ghl-widget-list layout-list";
   }
 
-  // Applies item width/height/columns/items-per-view as CSS custom
-  // properties on the widget body, same vars the React preview uses.
   function applySizeVars(body) {
-    if (settings.item_width) {
-      body.style.setProperty("--grid-item-width", settings.item_width + "px");
-      body.style.setProperty("--carousel-item-width", settings.item_width + "px");
-    }
-    body.style.setProperty(
-      "--grid-item-height",
-      settings.item_height ? settings.item_height + "px" : "auto"
-    );
-    body.style.setProperty(
-      "--carousel-item-height",
-      settings.item_height ? settings.item_height + "px" : "auto"
-    );
-    if (settings.grid_columns) {
-      body.style.setProperty("--grid-columns", settings.grid_columns);
-    }
-    body.style.setProperty(
-      "--carousel-items-per-view",
-      settings.carousel_items_per_view || 3
-    );
+    var perView = Math.max(1, Number(settings.carousel_items_per_view) || 1);
+
+    if (settings.item_width) body.style.setProperty("--grid-item-width", settings.item_width + "px");
+
+    body.style.setProperty("--carousel-item-width", settings.item_width ? settings.item_width + "px" : "220px");
+    body.style.setProperty("--grid-item-height", settings.item_height ? settings.item_height + "px" : "auto");
+    body.style.setProperty("--carousel-item-height", settings.item_height ? settings.item_height + "px" : "auto");
+    body.style.setProperty("--grid-columns", Math.max(1, Number(settings.grid_columns) || 1));
+    body.style.setProperty("--carousel-items-per-view", perView);
   }
 
   function speedToLoopDuration(speed) {
@@ -170,25 +148,21 @@ function renderItem(item) {
   }
 
   function renderStaticOrLoop(items, animation) {
-    var isCarousel = CAROUSEL_LAYOUTS.indexOf(settings.layout) !== -1;
+    var isCarousel = settings.layout === "carousel";
     var className = baseLayoutClassName(settings.layout);
     var body = getBodyEl();
+
     applySizeVars(body);
 
-    if (isCarousel && animation === "loop") {
-      className += " carousel-anim-loop";
-      body.className = className;
+    if (isCarousel && animation === "loop" && Number(settings.carousel_items_per_view) !== 0) {
+      body.className = className + " carousel-anim-loop";
       body.innerHTML = "";
 
       var track = document.createElement("div");
       track.className = "carousel-loop-track";
-      track.style.setProperty(
-        "--carousel-loop-duration",
-        speedToLoopDuration(settings.carousel_speed) + "s"
-      );
+      track.style.setProperty("--carousel-loop-duration", speedToLoopDuration(settings.carousel_speed) + "s");
 
-      var loopItems = items.concat(items);
-      loopItems.forEach(function (item) {
+      items.concat(items).forEach(function (item) {
         track.appendChild(renderItem(item));
       });
 
@@ -198,23 +172,28 @@ function renderItem(item) {
 
     body.className = className;
     body.innerHTML = "";
+
     items.forEach(function (item) {
       body.appendChild(renderItem(item));
     });
   }
 
   function renderBatch(items) {
-    var className = baseLayoutClassName(settings.layout) + " carousel-anim-batch";
     var body = getBodyEl();
-    body.className = className;
+    body.className = baseLayoutClassName(settings.layout) + " carousel-anim-batch";
     applySizeVars(body);
 
-    var batchSize = settings.carousel_items_per_view || items.length || 1;
+    var batchSize = Number(settings.carousel_items_per_view) === 0
+      ? 1
+      : Math.max(1, Number(settings.carousel_items_per_view) || 3);
+
     var batches = [];
+
     for (var i = 0; i < items.length; i += batchSize) {
       batches.push(items.slice(i, i + batchSize));
     }
-    if (batches.length === 0) batches = [[]];
+
+    if (!batches.length) batches = [[]];
 
     var batchIndex = 0;
 
@@ -232,7 +211,6 @@ function renderItem(item) {
     }
 
     paintBatch(true);
-
     clearBatchTimer();
 
     if (batches.length > 1) {
@@ -240,8 +218,8 @@ function renderItem(item) {
       var leaveDelay = Math.min(500, intervalMs * 0.4);
 
       batchTimer = setInterval(function () {
-        // play "leaving" animation on current batch
         var track = body.querySelector(".carousel-batch-track");
+
         if (track) track.className = "carousel-batch-track is-leaving";
 
         setTimeout(function () {
@@ -252,26 +230,105 @@ function renderItem(item) {
     }
   }
 
-  function render(items) {
-    var visibleItems = items.slice(0, settings.items_num);
-    var isCarousel = CAROUSEL_LAYOUTS.indexOf(settings.layout) !== -1;
-    var animation = isCarousel ? settings.carousel_animation || "none" : "none";
+  function renderAnnouncement(items) {
+    var visibleItems = items.slice(0, Math.max(1, Number(settings.items_num) || 1));
+    var animation = settings.layout === "carousel" ? settings.carousel_animation || "none" : "none";
 
     clearBatchTimer();
 
-    if (animation === "batch") {
-      renderBatch(visibleItems);
+    if (animation === "batch") renderBatch(visibleItems);
+    else renderStaticOrLoop(visibleItems, animation);
+  }
+
+  function renderFloating(items) {
+    var existing = root.querySelector(".ghl-floating-widget");
+
+    if (existing) existing.remove();
+    if (!settings.floating_enabled) return;
+
+    var title = (settings.floating_title || "").trim() || "User Data";
+    var visibleItems = items.slice(0, Math.max(1, Number(settings.items_num) || 1));
+
+    var wrapper = document.createElement("div");
+    wrapper.className = "ghl-floating-widget floating-position-" + (settings.floating_position || "bottom-right");
+
+    var trigger = document.createElement("button");
+    trigger.type = "button";
+    trigger.className = "ghl-floating-trigger";
+    trigger.textContent = title;
+
+    var panel = document.createElement("aside");
+    panel.className = "ghl-floating-panel floating-panel-" + (settings.floating_panel_side || "right");
+
+    var panelHeader = document.createElement("div");
+    panelHeader.className = "ghl-floating-panel-header";
+
+    var panelTitle = document.createElement("strong");
+    panelTitle.textContent = title;
+
+    var close = document.createElement("button");
+    close.type = "button";
+    close.className = "ghl-floating-close";
+    close.textContent = "×";
+    close.setAttribute("aria-label", "Close user data");
+
+    panelHeader.appendChild(panelTitle);
+    panelHeader.appendChild(close);
+
+    var list = document.createElement("div");
+    list.className = "ghl-floating-list";
+
+    if (!visibleItems.length) {
+      var empty = document.createElement("div");
+      empty.className = "ghl-floating-state";
+      empty.textContent = "No data available.";
+      list.appendChild(empty);
     } else {
-      renderStaticOrLoop(visibleItems, animation);
+      visibleItems.forEach(function (item) {
+        var row = document.createElement("div");
+        row.className = "ghl-floating-list-item";
+
+        var rowTitle = document.createElement("strong");
+        rowTitle.textContent = item.title;
+        row.appendChild(rowTitle);
+
+        if (item.subtitle) {
+          var rowSubtitle = document.createElement("span");
+          rowSubtitle.textContent = item.subtitle;
+          row.appendChild(rowSubtitle);
+        }
+
+        list.appendChild(row);
+      });
     }
+
+    panel.appendChild(panelHeader);
+    panel.appendChild(list);
+    wrapper.appendChild(trigger);
+    wrapper.appendChild(panel);
+    root.appendChild(wrapper);
+
+    trigger.addEventListener("click", function () {
+      wrapper.classList.toggle("is-open");
+    });
+
+    close.addEventListener("click", function () {
+      wrapper.classList.remove("is-open");
+    });
+  }
+
+  function render(items) {
+    renderAnnouncement(items);
+    renderFloating(items);
   }
 
   var cachedItems = null;
 
   function showError() {
-    root.className = "ghl-widget-root";
+    clearBatchTimer();
     root.innerHTML = "";
     root.appendChild(renderTitleDesc());
+
     var errorEl = document.createElement("div");
     errorEl.className = "ghl-widget-status";
     errorEl.textContent = "Unable to load content.";
@@ -280,7 +337,10 @@ function renderItem(item) {
 
   function fetchAndRender() {
     var url = settings.api && settings.api.url;
-    if (!url) return;
+    if (!url) {
+      render([]);
+      return;
+    }
 
     fetch(url)
       .then(function (res) {
@@ -299,6 +359,7 @@ function renderItem(item) {
 
   window.addEventListener("message", function (event) {
     var data = event && event.data;
+
     if (!data || data.type !== "ghl-widget-settings-update" || !data.settings) return;
 
     var prevLayout = settings.layout;
@@ -309,11 +370,8 @@ function renderItem(item) {
     var layoutChanged = settings.layout !== prevLayout;
     var urlChanged = (settings.api && settings.api.url) !== prevUrl;
 
-    if (layoutChanged || urlChanged || cachedItems === null) {
-      fetchAndRender();
-    } else {
-      render(cachedItems);
-    }
+    if (layoutChanged || urlChanged || cachedItems === null) fetchAndRender();
+    else render(cachedItems);
   });
 
   fetchAndRender();
