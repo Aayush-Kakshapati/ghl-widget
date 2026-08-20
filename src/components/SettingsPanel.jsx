@@ -13,13 +13,13 @@ function SettingsPanel() {
   const isGridLayout = settings.layout === "grid";
 
   useEffect(() => {
-    if (settings.floating_title?.trim()) {
+    if (settings.title?.trim()) {
       setFloatingTitleError("");
     }
-  }, [settings.floating_title]);
+  }, [settings.title]);
 
   function handleFloatingEnabledChange(enabled) {
-    if (enabled && !settings.floating_title?.trim()) {
+    if (enabled && !settings.title?.trim()) {
       setFloatingTitleError("A floating widget title is required.");
       updateSetting("floating_enabled", false);
       requestAnimationFrame(() => titleInputRef.current?.focus());
@@ -212,17 +212,6 @@ function SettingsPanel() {
 
         {settings.floating_enabled && (
           <>
-            <div className="field">
-              <label className="field-label">Floating Widget Title</label>
-              <input
-                type="text"
-                value={settings.floating_title}
-                onChange={(e) => updateSetting("floating_title", e.target.value)}
-                aria-invalid={Boolean(floatingTitleError)}
-              />
-              <div className="field-hint">Required while the floating widget is enabled.</div>
-            </div>
-
             <div className="field">
               <label className="field-label">Widget Position</label>
               <select

@@ -15,7 +15,6 @@ const defaultSettings = {
   carousel_speed: 5,
   grid_columns: 3,
   floating_enabled: false,
-  floating_title: "",
   floating_position: "bottom-right",
   floating_panel_side: "right",
   api: {

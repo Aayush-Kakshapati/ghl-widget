@@ -7,7 +7,7 @@ function FloatingWidget({ settings }) {
 
   if (!settings.floating_enabled) return null;
 
-  const title = settings.floating_title?.trim() || "User Data";
+  const title = settings.title?.trim() || "User Data";
   const visibleItems = items.slice(0, Number(settings.items_num) || 0);
 
   return (
@@ -15,17 +15,14 @@ function FloatingWidget({ settings }) {
       <button
         type="button"
         className="ghl-floating-trigger"
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => setOpen((currentOpen) => !currentOpen)}
         aria-expanded={open}
       >
         {title}
       </button>
 
-      <aside
-        className={`ghl-floating-panel floating-panel-${settings.floating_panel_side} ${
-          open ? "is-open" : ""
-        }`}
-        aria-hidden={!open}
+      {open && <aside
+        className={`ghl-floating-panel ghl-floating-panel-${settings.floating_panel_side}`}
       >
         <div className="ghl-floating-panel-header">
           <strong>{title}</strong>
@@ -35,7 +32,7 @@ function FloatingWidget({ settings }) {
             onClick={() => setOpen(false)}
             aria-label="Close user data"
           >
-            ×
+            x
           </button>
         </div>
 
@@ -54,7 +51,7 @@ function FloatingWidget({ settings }) {
               </div>
             ))}
         </div>
-      </aside>
+      </aside>}
     </div>
   );
 }

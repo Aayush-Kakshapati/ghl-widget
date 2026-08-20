@@ -770,23 +770,24 @@ body {
   display: flex;
   flex-direction: column;
   z-index: 10001;
-  transition: transform 260ms var(--ease-standard);
+  transition: transform 500ms var(--ease-standard);
   pointer-events: auto;
 }
 
 .ghl-floating-panel-right {
   right: 0;
-  transform: translateX(100%);
+  transform: translateX(-100%);
 }
 
 .ghl-floating-panel-left {
   left: 0;
-  transform: translateX(-100%);
+  transform: translateX(100%);
 }
 
 .ghl-floating-widget.is-open .ghl-floating-panel-right,
 .ghl-floating-widget.is-open .ghl-floating-panel-left {
   transform: translateX(0);
+  pointer-events: none;
 }
 
 .ghl-floating-panel-header {
