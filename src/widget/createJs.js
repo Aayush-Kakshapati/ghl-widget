@@ -272,8 +272,11 @@ function renderItem(item) {
     var position = settings.floating_position || "bottom-right";
     var panelSide = settings.floating_panel_side || "right";
 
-    root.className = "ghl-widget-root floating ghl-floating-widget ghl-floating-" + position;
+    root.className = "ghl-widget-root preview-floating-stage";
     root.innerHTML = "";
+
+    var floatingWidget = document.createElement("div");
+    floatingWidget.className = "ghl-floating-widget ghl-floating-" + position;
 
     var trigger = document.createElement("button");
     trigger.type = "button";
@@ -299,6 +302,9 @@ function renderItem(item) {
     headerTitle.textContent = label;
     header.appendChild(headerTitle);
 
+    var emptySpace = document.createElement("div");
+    emptySpace.className = "ghl-floating-empty-space"
+
     var closeBtn = document.createElement("button");
     closeBtn.type = "button";
     closeBtn.className = "ghl-floating-close";
@@ -322,9 +328,11 @@ function renderItem(item) {
     panel.appendChild(header);
     panel.appendChild(body);
 
-    root.appendChild(trigger);
-    root.appendChild(overlay);
-    root.appendChild(panel);
+    floatingWidget.appendChild(trigger);
+    floatingWidget.appendChild(overlay);
+    floatingWidget.appendChild(panel);
+    root.appendChild(emptySpace);
+    root.appendChild(floatingWidget);
 
     function setFloatingOpen(open) {
       floatingOpen = open;
