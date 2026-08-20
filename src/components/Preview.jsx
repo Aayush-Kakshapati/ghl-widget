@@ -1,17 +1,19 @@
 import { useWidgetStore } from "../store/widgetStore";
 import AnnouncementBanner from "./widgets/announcement/AnnouncementBanner";
-import FloatingWidget from "./widgets/floating-widget/FloatingWidget";
 
 function Preview() {
   const settings = useWidgetStore((state) => state.settings);
+  const isFloatingLayout = settings.layout === "floating";
 
   return (
     <div className="preview-panel">
       <h2>Preview</h2>
 
       <div className="preview-surface">
-        {settings.title ? <h3 className="preview-heading">{settings.title}</h3> : null}
-        {settings.description ? (
+        {!isFloatingLayout && settings.title ? (
+          <h3 className="preview-heading">{settings.title}</h3>
+        ) : null}
+        {!isFloatingLayout && settings.description ? (
           <p className="preview-description">{settings.description}</p>
         ) : null}
 
@@ -24,8 +26,9 @@ function Preview() {
           </span>
         </div>
 
-        {settings.type === "announcement" && <AnnouncementBanner settings={settings} />}
-        <FloatingWidget settings={settings} />
+        {settings.type === "announcement" && (
+          <AnnouncementBanner settings={settings} />
+        )}
       </div>
     </div>
   );

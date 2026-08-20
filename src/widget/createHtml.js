@@ -1,5 +1,8 @@
-export function createHtml(settings) {
+export function createHtml(settings, widgetId) {
   return `
-    <div id="ghl-widget" class="ghl-widget-root"></div>
+    <div
+      id="${widgetId}"
+      class="ghl-widget-root ${settings.layout}"
+    ></div>
   `;
 }

@@ -1,34 +1,18 @@
-import { useEffect, useRef, useState } from "react";
 import { useWidgetStore } from "../store/widgetStore";
 import { widgetRegistry } from "./widgets/registry";
 
 function SettingsPanel() {
   const settings = useWidgetStore((state) => state.settings);
-  const updateSetting = useWidgetStore((state) => state.updateSetting);
-  const layouts = widgetRegistry.announcement.layouts;
-  const titleInputRef = useRef(null);
-  const [floatingTitleError, setFloatingTitleError] = useState("");
 
+  const updateSetting = useWidgetStore((state) => state.updateSetting);
+
+  const layouts = widgetRegistry.announcement.layouts;
+
+  const isFloatingLayout = settings.layout === "floating";
   const isCarouselLayout = settings.layout === "carousel";
   const isGridLayout = settings.layout === "grid";
 
-  useEffect(() => {
-    if (settings.title?.trim()) {
-      setFloatingTitleError("");
-    }
-  }, [settings.title]);
-
-  function handleFloatingEnabledChange(enabled) {
-    if (enabled && !settings.title?.trim()) {
-      setFloatingTitleError("A floating widget title is required.");
-      updateSetting("floating_enabled", false);
-      requestAnimationFrame(() => titleInputRef.current?.focus());
-      return;
-    }
-
-    setFloatingTitleError("");
-    updateSetting("floating_enabled", enabled);
-  }
+  const titleMissing = isFloatingLayout && !settings.title?.trim();
 
   return (
     <div>
@@ -37,21 +21,27 @@ function SettingsPanel() {
       <div className="field">
         <label className="field-label">Title</label>
         <input
-          ref={titleInputRef}
           type="text"
-          value={settings.title}
+          defaultValue={settings.title}
           onChange={(e) => updateSetting("title", e.target.value)}
         />
+        {titleMissing && (
+          <div className="field-error">
+            Add a title, or the trigger button will show "User Data" instead.
+          </div>
+        )}
       </div>
 
-      <div className="field">
-        <label className="field-label">Description</label>
-        <input
-          type="text"
-          value={settings.description}
-          onChange={(e) => updateSetting("description", e.target.value)}
-        />
-      </div>
+      {!isFloatingLayout && (
+        <div className="field">
+          <label className="field-label">Description</label>
+          <input
+            type="text"
+            defaultValue={settings.description}
+            onChange={(e) => updateSetting("description", e.target.value)}
+          />
+        </div>
+      )}
 
       <div className="field">
         <label className="field-label">Display Layout</label>
@@ -67,6 +57,35 @@ function SettingsPanel() {
         </select>
       </div>
 
+      {isFloatingLayout && (
+        <>
+          <div className="field">
+            <label className="field-label">Widget Position</label>
+            <select
+              value={settings.floating_position}
+              onChange={(e) => updateSetting("floating_position", e.target.value)}
+            >
+              <option value="bottom-right">Bottom Right</option>
+              <option value="bottom-left">Bottom Left</option>
+              <option value="top-right">Top Right</option>
+              <option value="top-left">Top Left</option>
+            </select>
+          </div>
+
+          <div className="field">
+            <label className="field-label">Panel Opens From</label>
+            <select
+              value={settings.floating_panel_side}
+              onChange={(e) => updateSetting("floating_panel_side", e.target.value)}
+            >
+              <option value="right">Right</option>
+              <option value="left">Left</option>
+            </select>
+          </div>
+        </>
+      )}
+
+      {/* Item box size, applies to grid and carousel */}
       {(isGridLayout || isCarouselLayout) && (
         <div className="field-row">
           <div className="field">
@@ -90,21 +109,21 @@ function SettingsPanel() {
         </div>
       )}
 
+      {/* Grid: number of columns */}
       {isGridLayout && (
         <div className="field">
-          <label className="field-label">Grid Items Per View</label>
+          <label className="field-label">Grid Columns</label>
           <input
             type="number"
-            min="1"
+            min="0"
             value={settings.grid_columns}
-            onChange={(e) => updateSetting("grid_columns", Math.max(1, Number(e.target.value) || 1))}
+            onChange={(e) => updateSetting("grid_columns", Number(e.target.value))}
           />
-          <div className="field-hint">
-            This is the number of columns visible per row. The same value is used in the generated GHL widget.
-          </div>
+          <div className="field-hint">0 = auto-fit based on item width</div>
         </div>
       )}
 
+      {/* Carousel: how many items fit across the content width */}
       {isCarouselLayout && (
         <div className="field">
           <label className="field-label">Items Per View</label>
@@ -167,7 +186,7 @@ function SettingsPanel() {
           type="number"
           min="1"
           value={settings.items_num}
-          onChange={(e) => updateSetting("items_num", Math.max(1, Number(e.target.value) || 1))}
+          onChange={(e) => updateSetting("items_num", Number(e.target.value))}
         />
       </div>
 
@@ -195,48 +214,6 @@ function SettingsPanel() {
           <span className="slider"></span>
           <span>Display GHL Preview</span>
         </label>
-      </div>
-
-      <div className="field-group floating-settings">
-        <label className="toggle">
-          <input
-            type="checkbox"
-            checked={settings.floating_enabled}
-            onChange={(e) => handleFloatingEnabledChange(e.target.checked)}
-          />
-          <span className="slider"></span>
-          <span>Enable Floating Widget</span>
-        </label>
-
-        {floatingTitleError && <div className="field-error">{floatingTitleError}</div>}
-
-        {settings.floating_enabled && (
-          <>
-            <div className="field">
-              <label className="field-label">Widget Position</label>
-              <select
-                value={settings.floating_position}
-                onChange={(e) => updateSetting("floating_position", e.target.value)}
-              >
-                <option value="bottom-right">Bottom Right</option>
-                <option value="bottom-left">Bottom Left</option>
-                <option value="top-right">Top Right</option>
-                <option value="top-left">Top Left</option>
-              </select>
-            </div>
-
-            <div className="field">
-              <label className="field-label">Sliding Window Side</label>
-              <select
-                value={settings.floating_panel_side}
-                onChange={(e) => updateSetting("floating_panel_side", e.target.value)}
-              >
-                <option value="right">Right</option>
-                <option value="left">Left</option>
-              </select>
-            </div>
-          </>
-        )}
       </div>
     </div>
   );

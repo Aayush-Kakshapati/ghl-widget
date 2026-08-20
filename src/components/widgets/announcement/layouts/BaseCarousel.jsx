@@ -10,6 +10,9 @@ function speedToBatchInterval(speed) {
   const clamped = Math.min(10, Math.max(1, Number(speed) || 5));
   return 5000 - (clamped - 1) * ((5000 - 900) / 9);
 }
+
+// Single carousel used for all densities; item box size comes from
+// itemsPerView (content-width based) plus optional width/height caps.
 function BaseCarousel({
   items,
   layoutClassName,
@@ -22,8 +25,15 @@ function BaseCarousel({
   const [batchIndex, setBatchIndex] = useState(0);
   const [animating, setAnimating] = useState(false);
   const containerRef = useRef(null);
+
+  // itemsPerView = 0 means "full width" — one item spanning the whole
+  // content width, ignoring any pixel width cap.
   const isFullWidth = Number(itemsPerView) === 0;
   const perView = isFullWidth ? 1 : Math.max(1, Number(itemsPerView) || 1);
+
+  // Item flex-basis is a share of content width (via CSS var), capped by
+  // an explicit pixel width if the user set one. Full-width mode skips
+  // the cap so the item always fills 100% regardless of itemWidth.
   const carouselVars = {
     "--carousel-items-per-view": perView,
     "--carousel-item-width": isFullWidth
@@ -65,6 +75,9 @@ function BaseCarousel({
 
     return () => clearInterval(intervalRef.current);
   }, [animation, speed, batches.length]);
+
+  // A single full-width item has nothing to loop/scroll against, so
+  // full-width mode always renders statically regardless of animation.
   if (animation === "loop" && !isFullWidth) {
     const duration = speedToLoopDuration(speed);
     const loopItems = [...items, ...items];

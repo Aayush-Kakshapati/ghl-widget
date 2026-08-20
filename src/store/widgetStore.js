@@ -8,15 +8,24 @@ const defaultSettings = {
   items_num: 3,
   set_ghlpreview_visible: false,
   set_preview_visible: false,
-  item_width: 220,
-  item_height: 220,
+
+  // Item box size, used by grid and carousel layouts
+  item_width: 220, // px
+  item_height: 220, // px, "auto" also allowed
+
+  // Carousel: how many item boxes fit across the content width at once
+  // (0 = full width, one item per view, ignores item_width cap)
   carousel_items_per_view: 3,
-  carousel_animation: "none",
-  carousel_speed: 5,
+  carousel_animation: "none", // "none" | "loop" | "batch"
+  carousel_speed: 5, // 1 (slow) - 10 (fast)
+
+  // Grid: number of columns (0/"" = auto-fit based on item_width)
   grid_columns: 3,
-  floating_enabled: false,
+
+  // Floating: trigger corner and which side the sliding panel opens from
   floating_position: "bottom-right",
   floating_panel_side: "right",
+
   api: {
     url: "https://dummyjson.com/users",
   },
@@ -24,6 +33,7 @@ const defaultSettings = {
 
 export const useWidgetStore = create((set, get) => ({
   settings: defaultSettings,
+
   hasUserEdited: false,
 
   updateSetting: (key, value) => {
@@ -38,6 +48,7 @@ export const useWidgetStore = create((set, get) => ({
 
   setSettingsFromGHL: (settings) => {
     if (get().hasUserEdited) return;
+
     set({ settings });
   },
 

@@ -1,23 +1,37 @@
 import ListLayout from "./announcement/layouts/ListLayout";
 import GridLayout from "./announcement/layouts/GridLayout";
 import CarouselLayout from "./announcement/layouts/CarouselLayout";
+import FloatingLayout from "./announcement/layouts/FloatingLayout";
 
 export const widgetRegistry = {
   announcement: {
     name: "Announcement Banner",
+
     layouts: {
       list: {
         name: "List",
         component: ListLayout,
       },
+
       grid: {
         name: "Grid",
         component: GridLayout,
       },
+
       carousel: {
         name: "Carousel",
         component: CarouselLayout,
       },
+
+      floating: {
+        name: "Floating",
+        component: FloatingLayout,
+      },
     },
   },
+
+  // price: {
+  //   name: "Price Widget",
+  //   layouts: { ... }
+  // },
 };

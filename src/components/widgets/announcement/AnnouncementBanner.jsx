@@ -6,6 +6,7 @@ function AnnouncementBanner({ settings }) {
 
   const layoutConfig = widgetRegistry.announcement.layouts[settings.layout];
   const LayoutComponent = layoutConfig?.component;
+  const isFloatingLayout = settings.layout === "floating";
 
   const visibleItems = items.slice(0, Number(settings.items_num));
 
@@ -20,6 +21,14 @@ function AnnouncementBanner({ settings }) {
   if (!LayoutComponent) {
     return (
       <div className="ghl-widget-status">Unknown layout: {settings.layout}</div>
+    );
+  }
+
+  if (isFloatingLayout) {
+    return (
+      <div className="preview-floating-stage">
+        <LayoutComponent items={visibleItems} />
+      </div>
     );
   }
 
