@@ -809,6 +809,7 @@ body {
 }
 
 .ghl-floating-trigger {
+  position: absolute;
   width: max-content;
   max-width: 100%;
   margin: 0;

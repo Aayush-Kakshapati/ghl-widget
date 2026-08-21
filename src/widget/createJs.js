@@ -280,7 +280,7 @@ function renderItem(item) {
 
     var trigger = document.createElement("button");
     trigger.type = "button";
-    trigger.className = "ghl-floating-trigger";
+    trigger.className = "ghl-floating-trigger ghl-floating-" + position ;
     trigger.textContent = label;
     trigger.addEventListener("click", function () {
       setFloatingOpen(!floatingOpen);
@@ -328,7 +328,7 @@ function renderItem(item) {
     panel.appendChild(header);
     panel.appendChild(body);
 
-    floatingWidget.appendChild(trigger);
+    root.appendChild(trigger);
     floatingWidget.appendChild(overlay);
     floatingWidget.appendChild(panel);
     root.appendChild(emptySpace);
